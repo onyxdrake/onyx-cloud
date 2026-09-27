@@ -17,9 +17,9 @@ fi
 # Set remote pake token
 git remote set-url origin https://onyxdrake:$GITHUB_TOKEN@github.com/$GITHUB_REPO.git
 
-# Push
+# Push ke branch gh-pages
 git add -A
-git commit -m "Auto-push: $(date +%Y-%m-%d_%H:%M:%S)"
-git push origin master
+git commit -m "Auto-push: $(date +%Y-%m-%d_%H:%M:%S)" 2>/dev/null
+git push origin gh-pages
 
-echo "✅ Push berhasil"
+echo "✅ Push berhasil ke gh-pages"
