@@ -1,0 +1,12 @@
+<!DOCTYPE html>
+<html><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Botol Flip</title>
+<style>body{background:#0a0a0a;color:#0f0;font-family:monospace;display:flex;flex-direction:column;align-items:center;justify-content:center;height:100vh;margin:0}#botol{font-size:80px;transition:transform 0.5s}#skor{font-size:20px;margin:20px}</style></head>
+<body>
+<div id="skor">Skor: 0</div>
+<div id="botol">🍾</div>
+<button onclick="flip()" style="margin-top:20px;padding:12px 24px;background:#0f0;border:none;border-radius:12px;font-weight:bold">FLIP!</button>
+<a href="/game.html" style="color:#0f0;margin-top:20px">← Balik</a>
+<script>
+let skor=0,rotasi=0;
+function flip(){rotasi+=180+Math.random()*720;document.getElementById('botol').style.transform=`rotate(${rotasi}deg)`;setTimeout(()=>{const hasil=rotasi%360;if(Math.abs(hasil-180)<45||Math.abs(hasil-0)<45){skor++;document.getElementById('skor').textContent='Skor: '+skor}},600)}
+</script></body></html>

@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Block Blaze</title>
+<style>body{background:#0a0a0a;color:#0f0;font-family:monospace;display:flex;flex-direction:column;align-items:center;justify-content:center;height:100vh;margin:0}.grid{display:grid;grid-template-columns:repeat(6,50px);gap:4px}.cell{width:50px;height:50px;border-radius:8px;cursor:pointer}</style></head>
+<body>
+<h3>Block Blaze — Klik 2+ blok sama</h3>
+<div class="grid" id="g"></div>
+<a href="/game.html" style="color:#0f0;margin-top:20px">← Balik</a>
+<script>
+const colors=['#f00','#0f0','#00f','#ff0','#f0f','#0ff'];
+let grid;
+function init(){grid=Array(6).fill().map(()=>Array(6).fill().map(()=>Math.floor(Math.random()*6)));draw()}
+function draw(){const g=document.getElementById('g');g.innerHTML='';for(let i=0;i<6;i++)for(let j=0;j<6;j++){const d=document.createElement('div');d.className='cell';if(grid[i][j]>=0)d.style.background=colors[grid[i][j]];else d.style.background='#1a1a1a';d.onclick=()=>klik(i,j);g.appendChild(d)}}
+function klik(i,j){const c=grid[i][j];if(c<0)return;const group=cari(i,j,c);if(group.length<2)return;group.forEach(([a,b])=>grid[a][b]=-1);draw();setTimeout(drop,200)}
+function cari(i,j,c){const seen=new Set(),out=[];function dfs(a,b){if(a<0||a>=6||b<0||b>=6)return;if(grid[a][b]!==c)return;const k=a+','+b;if(seen.has(k))return;seen.add(k);out.push([a,b]);dfs(a+1,b);dfs(a-1,b);dfs(a,b+1);dfs(a,b-1)}dfs(i,j);return out}
+function drop(){for(let j=0;j<6;j++){const col=[];for(let i=5;i>=0;i--)if(grid[i][j]>=0)col.push(grid[i][j]);for(let i=5;i>=0;i--)grid[i][j]=col[5-i]??-1}draw()}
+init();
+</script></body></html>

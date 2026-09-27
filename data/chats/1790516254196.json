@@ -1,0 +1,19 @@
+{
+  "id": "1790516254196",
+  "title": "Hai kau bisa apa",
+  "userId": "1f30aa9ef2d5d69c",
+  "messages": [
+    {
+      "role": "user",
+      "content": "Hai kau bisa apa",
+      "ts": 1790516254197
+    },
+    {
+      "role": "ai",
+      "content": "\"Hai kau bisa apa?\" bisa ditulis dalam Bahasa Indonesia sebagai \"Hai kau bisa apa?\"",
+      "ts": 1790516277118
+    }
+  ],
+  "created": 1790516254196,
+  "updated": 1790516277119
+}

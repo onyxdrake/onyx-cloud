@@ -1,0 +1,29 @@
+{
+  "id": "1790499138744",
+  "title": "Buat gambar kucing",
+  "userId": "1f30aa9ef2d5d69c",
+  "messages": [
+    {
+      "role": "user",
+      "content": "Buat gambar kucing",
+      "ts": 1790499138749
+    },
+    {
+      "role": "ai",
+      "content": "🎨 Gue bikinin gambar: \"kucing\"\n\n[IMAGE]https://image.pollinations.ai/prompt/kucing%2C%20high%20quality?width=512&height=512&nologo=true&seed=1790499138751[/IMAGE]\n\n— Onyx",
+      "ts": 1790499138751
+    },
+    {
+      "role": "user",
+      "content": "Hai kau siapa",
+      "ts": 1790499364206
+    },
+    {
+      "role": "ai",
+      "content": "Saya adalah AI di Onyx Cloud yang bisa membantu Anda dengan berbagai tugas dan pertanyaan. Kapan pun Anda ingin, saya akan siap membantu Anda. Anda bisa bertanya tentang topik-topic Anda, atau selesaikan pertanyaan sehari-hari. Jika Anda ingin mencari informasi, saya dapat mencari informasi di internet. Jika Anda ingin mengelola file atau situs, saya dapat mengelola itulah. Jika Anda ingin mengembangkan website atau aplikasi, saya dapat membantu Anda dengan teknologi yang Anda butuhkan. Bagaimana dengan informasi apa yang ingin Anda tanyakan?",
+      "ts": 1790499389693
+    }
+  ],
+  "created": 1790499138745,
+  "updated": 1790499389694
+}

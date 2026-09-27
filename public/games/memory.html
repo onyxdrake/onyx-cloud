@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Memory</title>
+<style>body{background:#0a0a0a;color:#0f0;font-family:monospace;display:flex;flex-direction:column;align-items:center;justify-content:center;height:100vh;margin:0}.grid{display:grid;grid-template-columns:repeat(4,70px);gap:8px}.card{width:70px;height:70px;background:#1a1a1a;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:28px;cursor:pointer}.card.flip{background:#0f0;color:#000}</style></head>
+<body>
+<h2>Memory</h2>
+<div class="grid" id="g"></div>
+<a href="/game.html" style="color:#0f0;margin-top:20px">← Balik</a>
+<script>
+const icons=['🐶','🐱','🐭','🐹','🐰','🦊','🐻','🐼'];
+let deck=[...icons,...icons].sort(()=>Math.random()-0.5),flip=[],matched=0;
+function draw(){const g=document.getElementById('g');g.innerHTML='';deck.forEach((v,i)=>{const d=document.createElement('div');d.className='card'+(flip.includes(i)?' flip':'');d.textContent=flip.includes(i)?v:'';d.onclick=()=>klik(i);g.appendChild(d)})}
+function klik(i){if(flip.includes(i)||flip.length>=2)return;flip.push(i);draw();if(flip.length===2){setTimeout(()=>{if(deck[flip[0]]===deck[flip[1]]){matched++;if(matched===8){alert('Menang!');location.reload()}}else{flip=[]}draw()},800)}}
+draw();
+</script></body></html>

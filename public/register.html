@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#0a0a0a"><title>Register — Onyx</title>
+<style>* { box-sizing: border-box; margin: 0; padding: 0; } body { font-family: -apple-system, sans-serif; background: #0a0a0a; color: #eee; min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 20px; } .box { background: #141414; border: 1px solid #1f1f1f; border-radius: 16px; padding: 24px; max-width: 420px; width: 100%; max-height: 90vh; overflow-y: auto; } h1 { font-size: 22px; margin-bottom: 6px; background: linear-gradient(90deg, #0f0, #0ff); -webkit-background-clip: text; -webkit-text-fill-color: transparent; } p.sub { color: #666; font-size: 12px; margin-bottom: 18px; line-height: 1.5; } label { display: block; font-size: 12px; color: #aaa; margin-bottom: 6px; margin-top: 12px; } input { width: 100%; background: #0a0a0a; border: 1px solid #222; color: #eee; padding: 12px 14px; border-radius: 10px; font-size: 14px; outline: none; } input:focus { border-color: #0f0; } input.code-input { text-align: center; letter-spacing: 12px; font-size: 24px; font-weight: 700; } button { width: 100%; background: #0f0; color: #000; border: none; padding: 13px; border-radius: 10px; font-weight: 700; font-size: 14px; cursor: pointer; margin-top: 14px; } button:disabled { opacity: 0.5; } button.secondary { background: #1a1a1a; color: #0f0; border: 1px solid #0f0; } .link { text-align: center; margin-top: 14px; font-size: 13px; } .link a { color: #0f0; text-decoration: none; } .msg { padding: 10px; border-radius: 8px; font-size: 12px; margin-bottom: 10px; display: none; } .msg.ok { background: #1a3a1a; color: #0f0; display: block; } .msg.err { background: #3a1a1a; color: #f44; display: block; } .hint { font-size: 11px; color: #f44; margin-top: 4px; } .hidden { display: none; } .tos-box { background: #0a0a0a; border: 1px solid #222; border-radius: 10px; padding: 12px; font-size: 11px; color: #aaa; line-height: 1.6; max-height: 140px; overflow-y: auto; margin-top: 6px; } .tos-box h3 { color: #0f0; font-size: 12px; margin-bottom: 6px; } .tos-box ul { margin-left: 16px; margin-top: 6px; } .checkbox-row { display: flex; align-items: flex-start; gap: 8px; margin-top: 12px; font-size: 12px; color: #ccc; } .checkbox-row input { width: auto; margin-top: 2px; accent-color: #0f0; } .step-indicator { display: flex; gap: 6px; margin-bottom: 16px; } .step-indicator .dot { flex: 1; height: 3px; background: #222; border-radius: 2px; } .step-indicator .dot.active { background: #0f0; }</style></head>
+<body><div class="box">
+<div class="step-indicator"><div class="dot active" id="dot1"></div><div class="dot" id="dot2"></div><div class="dot" id="dot3"></div></div>
+<div id="step1">
+<h1>Register Onyx</h1>
+<p class="sub">Create account, verify email, start chatting.</p>
+<div class="msg" id="msg1"></div>
+<label>Email</label>
+<input id="email" type="email" placeholder="name@gmail.com" autocomplete="email">
+<div class="hint" id="hint-email"></div>
+<label>Password</label>
+<input id="password" type="password" placeholder="Min 6 characters" autocomplete="new-password">
+<div class="hint" id="hint-password"></div>
+<label>Repeat Password</label>
+<input id="password2" type="password" placeholder="Repeat password" autocomplete="new-password">
+<div class="hint" id="hint-password2"></div>
+<label>Terms of Service (TOS)</label>
+<div class="tos-box">
+<h3>📜 Onyx Terms of Service</h3>
+<p>By registering, you agree to:</p>
+<ul><li>Use Onyx for lawful purposes.</li><li>Not spam, abuse, or attack the server.</li><li>Not use for illegal activities (hacking, scams, etc.).</li><li>Chat data is stored to improve AI quality.</li><li>You can delete your account anytime.</li></ul>
+<p style="margin-top:8px;color:#f44;">⚠️ Violation = permanent ban.</p>
+</div>
+<div class="checkbox-row"><input type="checkbox" id="agree"><label for="agree" style="margin:0;font-size:12px;color:#ccc;">I agree to the Onyx Terms of Service</label></div>
+<button onclick="kirimKode()" id="btn1">Send Verification Code</button>
+<div class="link">Already have an account? <a href="/login.html">Login</a></div>
+</div>
+
+<div id="step2" class="hidden">
+<h1>Verify Email</h1>
+<p class="sub">A 4-digit code has been sent to your email.</p>
+<div class="msg" id="msg2"></div>
+<label>Verification Code</label>
+<input id="kode" type="text" class="code-input" placeholder="0000" maxlength="4" inputmode="numeric">
+<button onclick="verifikasi()" id="btn2">Verify & Register</button>
+<button class="secondary" onclick="kirimUlang()">Resend Code</button>
+<div class="link"><a href="#" onclick="balikStep1()">← Change email</a></div>
+</div>
+
+<div id="step3" class="hidden" style="text-align:center;">
+<h1>✅ Success!</h1>
+<p class="sub">Your account has been created. Redirecting...</p>
+</div>
+</div>
+<script>
+let emailTmp = '', passTmp = '';
+function setStep(n) {
+  document.getElementById('step1').classList.toggle('hidden', n !== 1);
+  document.getElementById('step2').classList.toggle('hidden', n !== 2);
+  document.getElementById('step3').classList.toggle('hidden', n !== 3);
+  document.getElementById('dot1').classList.toggle('active', n >= 1);
+  document.getElementById('dot2').classList.toggle('active', n >= 2);
+  document.getElementById('dot3').classList.toggle('active', n >= 3);
+}
+async function kirimKode() {
+  const email = document.getElementById('email').value.trim();
+  const password = document.getElementById('password').value;
+  const password2 = document.getElementById('password2').value;
+  const agree = document.getElementById('agree').checked;
+  const msg = document.getElementById('msg1');
+  const he = document.getElementById('hint-email');
+  const hp = document.getElementById('hint-password');
+  const hp2 = document.getElementById('hint-password2');
+  msg.className = 'msg'; msg.textContent = '';
+  he.textContent = ''; hp.textContent = ''; hp2.textContent = '';
+  if (!email) { he.textContent = '⚠️ Email required'; return; }
+  if (!email.includes('@')) { he.textContent = '⚠️ Invalid email'; return; }
+  if (!password) { hp.textContent = '⚠️ Password required'; return; }
+  if (password.length < 6) { hp.textContent = '⚠️ Min 6 characters'; return; }
+  if (password !== password2) { hp2.textContent = '⚠️ Passwords do not match'; return; }
+  if (!agree) { msg.className = 'msg err'; msg.textContent = '❌ You must agree to TOS'; return; }
+  document.getElementById('btn1').disabled = true;
+  try {
+    const res = await fetch('/api/verify/send', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ email }) });
+    const data = await res.json();
+    if (data.ok) {
+      emailTmp = email; passTmp = password;
+      setStep(2);
+      if (data.dev) { document.getElementById('msg2').className = 'msg ok'; document.getElementById('msg2').textContent = '🔧 DEV MODE: Code = ' + data.kode; }
+    } else { msg.className = 'msg err'; msg.textContent = '❌ ' + (data.error || 'Failed to send code'); }
+  } catch (e) { msg.className = 'msg err'; msg.textContent = '❌ ' + e.message; }
+  document.getElementById('btn1').disabled = false;
+}
+async function verifikasi() {
+  const kode = document.getElementById('kode').value.trim();
+  const msg = document.getElementById('msg2');
+  if (kode.length !== 4) { msg.className = 'msg err'; msg.textContent = '⚠️ Code must be 4 digits'; return; }
+  document.getElementById('btn2').disabled = true;
+  try {
+    const res = await fetch('/api/verify/check', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ email: emailTmp, kode }) });
+    const data = await res.json();
+    if (!data.ok) { msg.className = 'msg err'; msg.textContent = '❌ ' + data.error; document.getElementById('btn2').disabled = false; return; }
+    const res2 = await fetch('/api/register', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ email: emailTmp, password: passTmp, kode }) });
+    const data2 = await res2.json();
+    if (data2.ok) {
+      localStorage.setItem('onyx_userId', data2.userId);
+      localStorage.setItem('onyx_email', emailTmp);
+      setStep(3);
+      setTimeout(() => window.location.href = '/onyx.html', 1500);
+    } else { msg.className = 'msg err'; msg.textContent = '❌ ' + (data2.error || 'Registration failed'); document.getElementById('btn2').disabled = false; }
+  } catch (e) { msg.className = 'msg err'; msg.textContent = '❌ ' + e.message; document.getElementById('btn2').disabled = false; }
+}
+async function kirimUlang() {
+  const msg = document.getElementById('msg2');
+  msg.className = 'msg'; msg.textContent = 'Sending...';
+  const res = await fetch('/api/verify/send', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ email: emailTmp }) });
+  const data = await res.json();
+  if (data.ok) { msg.className = 'msg ok'; msg.textContent = data.dev ? '🔧 DEV: Code = ' + data.kode : '✅ New code sent'; }
+  else { msg.className = 'msg err'; msg.textContent = '❌ ' + data.error; }
+}
+function balikStep1() { setStep(1); }
+</script></body></html>

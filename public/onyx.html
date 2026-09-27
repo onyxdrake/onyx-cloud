@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+  <meta name="theme-color" content="#0a0a0a">
+  <title>Onyx AI</title>
+  <link rel="manifest" href="/manifest.json">
+  <link rel="icon" href="/icon-192.png">
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+    :root { --bg: #0a0a0a; --panel: #141414; --border: #1f1f1f; --text: #eee; --dim: #666; --accent: #0f0; }
+    html, body { width: 100%; height: 100%; overflow: hidden; }
+    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: var(--bg); color: var(--text); font-size: 13px; display: flex; }
+
+    #sidebar { position: fixed; top: 0; left: 0; bottom: 0; width: 260px; background: #0d0d0d; border-right: 1px solid var(--border); display: flex; flex-direction: column; transform: translateX(-100%); transition: transform 0.3s ease; z-index: 1000; }
+    #sidebar.open { transform: translateX(0); }
+    #sidebar .top { padding: 12px; border-bottom: 1px solid var(--border); }
+    #sidebar .new-chat { width: 100%; background: var(--accent); color: #000; border: none; padding: 9px; border-radius: 10px; font-weight: 600; cursor: pointer; font-size: 12px; }
+    #sidebar .search { width: 100%; margin-top: 6px; background: #1a1a1a; border: 1px solid var(--border); color: var(--text); padding: 7px 10px; border-radius: 8px; font-size: 11px; outline: none; }
+    #sidebar .list { flex: 1; overflow-y: auto; padding: 6px; }
+    #sidebar .item { padding: 8px 10px; border-radius: 8px; cursor: pointer; font-size: 12px; color: #bbb; margin-bottom: 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    #sidebar .item:hover { background: #1a1a1a; color: #fff; }
+    #sidebar .item.active { background: #1a3a1a; color: var(--accent); }
+    #sidebar .user-box { padding: 8px 12px; border-top: 1px solid var(--border); font-size: 11px; }
+    #sidebar .user-box .email { color: var(--accent); font-weight: 600; word-break: break-all; }
+    #sidebar .user-box .tier { color: var(--dim); margin-top: 2px; }
+    #sidebar .bottom { padding: 8px; border-top: 1px solid var(--border); font-size: 11px; }
+    #sidebar .bottom a { color: var(--accent); text-decoration: none; display: block; padding: 5px 0; }
+    #sidebar .close-btn { position: absolute; top: 8px; right: 8px; background: #1a1a1a; border: 1px solid var(--border); color: var(--accent); font-size: 18px; width: 30px; height: 30px; border-radius: 50%; cursor: pointer; z-index: 1001; display: flex; align-items: center; justify-content: center; }
+
+    #overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.6); z-index: 999; }
+    #overlay.show { display: block; }
+
+    #main { flex: 1; display: flex; flex-direction: column; min-width: 0; width: 100%; }
+
+    header { padding: 8px 10px; border-bottom: 1px solid var(--border); display: flex; align-items: center; gap: 8px; background: var(--bg); flex-shrink: 0; }
+    header .menu-btn { background: none; border: none; color: var(--accent); font-size: 22px; cursor: pointer; padding: 4px 6px; }
+    header h1 { font-size: 14px; font-weight: 600; background: linear-gradient(90deg, var(--accent), #0ff); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+    header .status { margin-left: auto; font-size: 10px; color: var(--dim); }
+    header .status.online { color: var(--accent); }
+    header .status.offline { color: #f44; }
+
+    #chat { flex: 1; overflow-y: auto; padding: 10px; display: flex; flex-direction: column; gap: 8px; }
+    .msg { max-width: 88%; line-height: 1.4; white-space: pre-wrap; word-wrap: break-word; font-size: 12px; animation: fadeIn 0.3s ease; }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: translateY(0); } }
+    .user { align-self: flex-end; background: linear-gradient(135deg, #1a4a1a, #0d2a0d); padding: 8px 12px; border-radius: 14px 14px 4px 14px; border: 1px solid #1f5f1f; }
+    .ai { align-self: flex-start; background: var(--panel); padding: 8px 12px; border-radius: 14px 14px 14px 4px; border: 1px solid var(--border); }
+    .ai img { max-width: 100%; border-radius: 10px; margin-top: 8px; display: block; }
+    .typing { color: var(--dim); font-style: italic; font-size: 11px; }
+    .msg-actions { display: flex; gap: 4px; margin-top: 4px; opacity: 0.6; }
+    .msg-actions button { background: none; border: none; color: var(--dim); cursor: pointer; font-size: 11px; padding: 2px 3px; }
+
+    .toolbar { display: flex; gap: 4px; padding: 6px 8px; flex-wrap: wrap; border-top: 1px solid var(--border); align-items: center; flex-shrink: 0; }
+    .toolbar button, .toolbar select { background: var(--panel); color: var(--accent); border: 1px solid var(--border); padding: 5px 8px; border-radius: 12px; font-size: 10px; cursor: pointer; outline: none; }
+    #limit-info { margin-left: auto; font-size: 9px; color: #666; }
+
+    #input-area { padding: 8px 10px; border-top: 1px solid var(--border); display: flex; gap: 6px; align-items: flex-end; flex-shrink: 0; }
+    #input { flex: 1; background: var(--panel); border: 1px solid var(--border); color: var(--text); padding: 8px 12px; border-radius: 16px; outline: none; font-size: 12px; font-family: inherit; resize: none; max-height: 80px; }
+    #input:focus { border-color: var(--accent); }
+    #send { background: var(--accent); color: #000; border: none; width: 36px; height: 36px; border-radius: 50%; font-weight: 700; cursor: pointer; font-size: 14px; flex-shrink: 0; }
+    #send:disabled { opacity: 0.3; }
+
+    @media (min-width: 1024px) {
+      #sidebar { transform: translateX(0); }
+      header .menu-btn { display: none; }
+      #sidebar .close-btn { display: none; }
+    }
+
+    #update-toast { position: fixed; top: 50px; left: 50%; transform: translateX(-50%); background: var(--accent); color: #000; padding: 8px 16px; border-radius: 16px; font-size: 12px; font-weight: 600; display: none; z-index: 9999; cursor: pointer; }
+    #update-toast.show { display: block; }
+  </style>
+</head>
+<body>
+  <div id="overlay" onclick="toggleSidebar()"></div>
+
+  <aside id="sidebar">
+    <button class="close-btn" onclick="toggleSidebar()">×</button>
+    <div class="top">
+      <button class="new-chat" onclick="newChat()">+ New Chat</button>
+      <input class="search" placeholder="🔎 Search..." oninput="filterChats(this.value)">
+    </div>
+    <div class="list" id="chat-list"></div>
+    <div class="user-box">
+      <div class="email" id="user-email">Not logged in</div>
+      <div class="tier" id="user-tier">FREE</div>
+    </div>
+    <div class="bottom">
+      <a href="/premium.html">💎 Premium</a>
+      <a href="/profile.html">👤 Profile</a>
+      <a href="/integrations.html">🔌 Integrations</a>
+      <a href="/background.html">🎨 Background</a>
+      <a href="/login.html">🔑 Login</a>
+      <a href="/register.html">📝 Register</a>
+      <a href="/disclaimer.html">⚠️ Disclaimer</a>
+      <a href="/docs.html">📖 Docs</a>
+      <a href="/settings.html">⚙ Settings</a>
+      <a href="#" onclick="clearAll()">🗑️ Clear All</a>
+    </div>
+  </aside>
+
+  <main id="main">
+    <header>
+      <button class="menu-btn" onclick="toggleSidebar()">☰</button>
+      <h1>Onyx AI</h1>
+      <button id="installBtn" onclick="installPWA()" style="display:none;background:#0f0;color:#000;border:none;padding:4px 10px;border-radius:12px;font-size:11px;font-weight:700;cursor:pointer;margin-left:auto;">📲 Install</button>
+      <div class="status online" id="status">🟢</div>
+    </header>
+
+    <div id="chat">
+      <div class="msg ai">Hi! I'm Onyx. How can I help you today?</div>
+    </div>
+
+    <div class="toolbar">
+      <select id="lang-select" onchange="gantiBahasa()">
+        <option value="EN">🇬🇧 EN</option>
+        <option value="ID">🇮🇩 ID</option>
+        <option value="MS">🇲🇾 MS</option>
+        <option value="ZH">🇨🇳 ZH</option>
+        <option value="JA">🇯🇵 JA</option>
+        <option value="KO">🇰🇷 KO</option>
+        <option value="AR">🇸🇦 AR</option>
+        <option value="HI">🇮🇳 HI</option>
+        <option value="TH">🇹🇭 TH</option>
+        <option value="VI">🇻🇳 VI</option>
+        <option value="TL">🇵🇭 TL</option>
+        <option value="ES">🇪🇸 ES</option>
+        <option value="FR">🇫🇷 FR</option>
+        <option value="DE">🇩🇪 DE</option>
+        <option value="IT">🇮🇹 IT</option>
+        <option value="PT">🇵🇹 PT</option>
+        <option value="RU">🇷🇺 RU</option>
+        <option value="TR">🇹🇷 TR</option>
+        <option value="NL">🇳🇱 NL</option>
+        <option value="PL">🇵🇱 PL</option>
+      </select>
+      <select id="personality-select" onchange="gantiPersonality()">
+        <option value="formal">👔 Formal</option>
+        <option value="casual">😊 Casual</option>
+        <option value="emotional">💕 Emotional</option>
+      </select>
+      <select id="mode-select" onchange="gantiMode()">
+        <option value="chat">⚡ Operator</option>
+        <option value="santai">😊 Casual</option>
+        <option value="expert">🎓 Expert</option>
+        <option value="reasoner">🧠 Reasoner</option>
+        <option value="coder">💻 Coder</option>
+        <option value="researcher">🔍 Researcher</option>
+        <option value="creator">🎨 Creator</option>
+      </select>
+      <button onclick="kerjakan()" style="background:#0f0;color:#000;font-weight:700;">🚀 Work</button>
+      <button onclick="generateGambar()">🎨</button>
+      <button onclick="mintaLokasi()">📍</button>
+      <button onclick="uploadFile()">📁</button>
+      <span id="limit-info">Limit: -</span>
+    </div>
+
+    <div id="input-area">
+      <textarea id="input" placeholder="Type a message..." rows="1"></textarea>
+      <button id="send" onclick="kirim()">↑</button>
+    </div>
+  </main>
+
+  <input type="file" id="file-input" style="display:none" onchange="handleFile(this)">
+  <div id="update-toast" onclick="applyUpdate()">🔄 Update — click refresh</div>
+
+  <script>
+    function gantiBahasa() {
+      const lang = document.getElementById('lang-select').value;
+      localStorage.setItem('onyx_lang', lang);
+      console.log('Language:', lang);
+    }
+    const savedLang = localStorage.getItem('onyx_lang') || 'EN';
+    const langSelect = document.getElementById('lang-select');
+    if (langSelect) langSelect.value = savedLang;
+
+    let deferredPrompt = null;
+    window.addEventListener('beforeinstallprompt', (e) => {
+      e.preventDefault();
+      deferredPrompt = e;
+      const btn = document.getElementById('installBtn');
+      if (btn) btn.style.display = 'block';
+    });
+    function installPWA() {
+      if (!deferredPrompt) {
+        alert('Open Chrome menu (⋮) → "Add to Home screen"');
+        return;
+      }
+      deferredPrompt.prompt();
+      deferredPrompt.userChoice.then(choice => {
+        if (choice.outcome === 'accepted') {
+          const btn = document.getElementById('installBtn');
+          if (btn) btn.style.display = 'none';
+        }
+        deferredPrompt = null;
+      });
+    }
+    if (window.matchMedia('(display-mode: standalone)').matches) {
+      const btn = document.getElementById('installBtn');
+      if (btn) btn.style.display = 'none';
+    }
+  </script>
+  <script>
+    function gantiPersonality() {
+      const p = document.getElementById('personality-select').value;
+      localStorage.setItem('onyx_personality', p);
+    }
+    const savedP = localStorage.getItem('onyx_personality') || 'formal';
+    const pSel = document.getElementById('personality-select');
+    if (pSel) pSel.value = savedP;
+    </script>
+    <script src="/js/config-sync.js"></script>
+  <script src="/js/onyx.js"></script>
+
+  <div id="disclaimer-modal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.9);z-index:99999;align-items:center;justify-content:center;padding:20px;">
+    <div style="background:#141414;border:1px solid #1f1f1f;border-radius:16px;padding:24px;max-width:480px;width:100%;max-height:80vh;overflow-y:auto;">
+      <h2 style="color:#0f0;font-size:18px;margin-bottom:12px;">⚠️ Security Notice</h2>
+      <div style="font-size:13px;color:#ccc;line-height:1.7;">
+        <p style="margin-bottom:10px;"><strong style="color:#0f0;">1. Never share API keys.</strong> Onyx Cloud will never ask for your credentials through chat.</p>
+        <p style="margin-bottom:10px;"><strong style="color:#0f0;">2. Do not submit excessive data.</strong> Avoid personal documents or confidential information.</p>
+        <p style="margin-bottom:10px;"><strong style="color:#f44;">3. Beware of impersonators.</strong> Any party claiming to represent Onyx Cloud is not affiliated with us unless verified through official channels.</p>
+        <p style="margin-bottom:10px;"><strong style="color:#0f0;">4. If you do not trust us,</strong> you are free to leave. Your comfort comes first.</p>
+        <p style="margin-bottom:10px;"><strong style="color:#0f0;">5. Anonymity.</strong> We maintain an anonymous environment, comparable to Telegram.</p>
+        <p style="margin-bottom:10px;"><strong style="color:#0f0;">6. No official presence.</strong> Onyx Cloud has no offices or representatives in any region.</p>
+        <p style="margin-bottom:16px;"><a href="/disclaimer.html" style="color:#0f0;">Read full disclaimer →</a></p>
+      </div>
+      <button onclick="acceptDisclaimer()" style="width:100%;background:#0f0;color:#000;border:none;padding:12px;border-radius:10px;font-weight:700;font-size:14px;cursor:pointer;">I Understand</button>
+    </div>
+  </div>
+  <script>
+    if (!localStorage.getItem('onyx_disclaimer_accepted')) {
+      document.getElementById('disclaimer-modal').style.display = 'flex';
+    }
+    function acceptDisclaimer() {
+      localStorage.setItem('onyx_disclaimer_accepted', '1');
+      document.getElementById('disclaimer-modal').style.display = 'none';
+    }
+  </script>
+</body>
+</html>

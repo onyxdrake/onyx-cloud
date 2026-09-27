@@ -1,0 +1,28 @@
+{
+  "name": "pardus-clone",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "dependencies": {
+    "@solana/web3.js": "^1.99.0",
+    "@xenova/transformers": "^1.4.2",
+    "archiver": "^8.0.0",
+    "bcryptjs": "^3.0.3",
+    "bip39": "^3.1.0",
+    "dotenv": "^18.0.4",
+    "ed25519-hd-key": "^2.0.0",
+    "express": "^5.2.1",
+    "express-rate-limit": "^8.7.0",
+    "jsonwebtoken": "^9.0.3",
+    "nodemailer": "^10.0.10",
+    "onnxruntime-web": "^1.30.0",
+    "sql.js": "^1.14.2"
+  }
+}

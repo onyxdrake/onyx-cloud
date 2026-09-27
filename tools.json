@@ -1,0 +1,54 @@
+{
+  "tools": [
+    {
+      "name": "think",
+      "description": "Mikir dulu sebelum panggil alat lain. Isi dengan alasan kenapa butuh alat.",
+      "arguments": { "reasoning": "string" }
+    },
+    {
+      "name": "search",
+      "description": "Cari informasi umum di internet lewat DuckDuckGo.",
+      "arguments": { "query": "string" }
+    },
+    {
+      "name": "fetch",
+      "description": "Ambil isi halaman web dari URL tertentu.",
+      "arguments": { "url": "string" }
+    },
+    {
+      "name": "github",
+      "description": "Cari repo atau kode di GitHub.",
+      "arguments": { "query": "string" }
+    },
+    {
+      "name": "dread",
+      "description": "Cari di forum dark web Dread (via Tor).",
+      "arguments": { "query": "string" }
+    },
+    {
+      "name": "torch",
+      "description": "Cari di mesin pencari dark web Torch (via Tor).",
+      "arguments": { "query": "string" }
+    },
+    {
+      "name": "groq",
+      "description": "Tanya AI Groq untuk tugas kompleks (kode, analisis berat).",
+      "arguments": { "prompt": "string" }
+    },
+    {
+      "name": "cerebras",
+      "description": "Tanya AI Cerebras untuk tugas kompleks (fallback Groq).",
+      "arguments": { "prompt": "string" }
+    },
+    {
+      "name": "telegram",
+      "description": "Kirim pesan ke nomor Telegram user.",
+      "arguments": { "pesan": "string" }
+    },
+    {
+      "name": "gmail",
+      "description": "Kirim email lewat Gmail user.",
+      "arguments": { "to": "string", "subject": "string", "body": "string" }
+    }
+  ]
+}
