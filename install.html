@@ -24,6 +24,7 @@
     <p>Onyx is installed as a PWA. Tap the button below to open the app, then use Chrome's "Add to Home screen".</p>
     <a class="btn" id="openBtn" href="#">📲 Open Onyx</a>
     <a class="btn btn-secondary" id="installBtn" href="#">⬇️ Install PWA</a>
+    <button class="btn btn-secondary" onclick="requestPush()">🔔 Enable Notifications</button>
     <div class="status" id="status">Checking server...</div>
   </div>
   <script>
@@ -43,6 +44,19 @@
         }
       } catch (e) {
         document.getElementById('status').textContent = '❌ Failed to load config';
+      }
+    }
+    async function requestPush() {
+      if (!('Notification' in window)) {
+        alert('Push not supported');
+        return;
+      }
+      const permission = await Notification.requestPermission();
+      if (permission === 'granted') {
+        new Notification('Onyx Cloud', {
+          body: 'Notifications enabled!',
+          icon: '/icon-192.png'
+        });
       }
     }
     loadConfig();
