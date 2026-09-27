@@ -1,6 +1,6 @@
 {
-  "status": "on",
-  "cloudflareUrl": "https://chef-anywhere-saves-vip.trycloudflare.com",
-  "updated": "2026-09-27T15:26:30.634Z",
+  "status": "off",
+  "cloudflareUrl": null,
+  "updated": "2026-09-27T15:27:40.040Z",
   "version": "1.0.0"
 }
