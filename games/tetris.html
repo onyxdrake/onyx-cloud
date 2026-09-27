@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Tetris</title>
+<style>body{background:#0a0a0a;color:#0f0;font-family:monospace;display:flex;flex-direction:column;align-items:center;justify-content:center;height:100vh;margin:0}canvas{border:2px solid #0f0;background:#000}#info{font-size:14px;margin-bottom:10px}</style></head>
+<body>
+<div id="info">Score: <span id="s">0</span></div>
+<canvas id="c" width="200" height="400"></canvas>
+<a href="/game.html" style="color:#0f0;margin-top:20px">← Balik</a>
+<script>
+const c=document.getElementById('c'),x=c.getContext('2d'),B=20,W=10,H=20;
+let grid=Array(H).fill().map(()=>Array(W).fill(0)),score=0,piece,px,py;
+const SHAPES=[[[1,1,1,1]],[[1,1],[1,1]],[[0,1,0],[1,1,1]],[[1,0,0],[1,1,1]],[[0,0,1],[1,1,1]],[[1,1,0],[0,1,1]],[[0,1,1],[1,1,0]]];
+function spawn(){piece=SHAPES[Math.floor(Math.random()*SHAPES.length)];px=Math.floor((W-piece[0].length)/2);py=0}
+function draw(){x.fillStyle='#000';x.fillRect(0,0,200,400);x.fillStyle='#0f0';for(let i=0;i<H;i++)for(let j=0;j<W;j++)if(grid[i][j])x.fillRect(j*B,i*B,B-1,B-1);if(piece)x.fillStyle='#0ff';for(let i=0;i<piece.length;i++)for(let j=0;j<piece[i].length;j++)if(piece[i][j])x.fillRect((px+j)*B,(py+i)*B,B-1,B-1)}
+function collide(nx,ny,p){for(let i=0;i<p.length;i++)for(let j=0;j<p[i].length;j++)if(p[i][j]){const x2=nx+j,y2=ny+i;if(x2<0||x2>=W||y2>=H||(y2>=0&&grid[y2][x2]))return true}return false}
+function merge(){for(let i=0;i<piece.length;i++)for(let j=0;j<piece[i].length;j++)if(piece[i][j]&&py+i>=0)grid[py+i][px+j]=1}
+function clear(){let n=0;for(let i=H-1;i>=0;i--)if(grid[i].every(v=>v)){grid.splice(i,1);grid.unshift(Array(W).fill(0));n++;i++}if(n){score+=n*10;document.getElementById('s').textContent=score}}
+function step(){if(collide(px,py+1,piece)){merge();clear();spawn();if(collide(px,py,piece)){alert('Game Over! Score: '+score);location.reload()}}else py++;draw()}
+document.addEventListener('keydown',e=>{if(e.key==='ArrowLeft'&&!collide(px-1,py,piece))px--;if(e.key==='ArrowRight'&&!collide(px+1,py,piece))px++;if(e.key==='ArrowDown')step();if(e.key==='ArrowUp'){const r=piece[0].map((_,i)=>piece.map(row=>row[i]).reverse());if(!collide(px,py,r))piece=r}draw()});
+spawn();setInterval(step,500);draw();
+</script></body></html>

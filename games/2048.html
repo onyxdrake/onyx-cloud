@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>2048</title>
+<style>body{background:#0a0a0a;color:#0f0;font-family:monospace;display:flex;flex-direction:column;align-items:center;justify-content:center;height:100vh;margin:0}.grid{display:grid;grid-template-columns:repeat(4,70px);gap:8px}.cell{width:70px;height:70px;background:#1a1a1a;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:24px;font-weight:bold}.cell[data-v="2"]{background:#2a4a2a}.cell[data-v="4"]{background:#3a5a3a}.cell[data-v="8"]{background:#4a6a4a}.cell[data-v="16"]{background:#5a7a5a}.cell[data-v="32"]{background:#6a8a6a}.cell[data-v="64"]{background:#7a9a7a}.cell[data-v="128"]{background:#0f0;color:#000}.cell[data-v="256"]{background:#0ff;color:#000}button{margin-top:20px;padding:10px;background:#0f0;border:none;border-radius:8px}a{color:#0f0;margin-top:20px}</style></head>
+<body>
+<h2>2048</h2>
+<div class="grid" id="g"></div>
+<button onclick="init()">Reset</button>
+<a href="/game.html">← Balik</a>
+<script>
+let b;
+function init(){b=Array(4).fill().map(()=>Array(4).fill(0));add();add();draw()}
+function add(){let e=[];for(let i=0;i<4;i++)for(let j=0;j<4;j++)if(b[i][j]===0)e.push([i,j]);if(e.length){let[r,c]=e[Math.floor(Math.random()*e.length)];b[r][c]=Math.random()<0.9?2:4}}
+function draw(){const g=document.getElementById('g');g.innerHTML='';b.forEach(r=>r.forEach(v=>{const d=document.createElement('div');d.className='cell';d.textContent=v||'';d.dataset.v=v;g.appendChild(d)}))}
+function move(d){let m=false;for(let i=0;i<4;i++){let line=b.map(r=>r[i]).filter(v=>v);if(d==='down')line.reverse();for(let j=0;j<line.length-1;j++)if(line[j]===line[j+1]){line[j]*=2;line[j+1]=0}line=line.filter(v=>v);if(d==='down')line.reverse();for(let j=0;j<4;j++){if(b[j][i]!==(line[j]||0))m=true;b[j][i]=line[j]||0}}}if(m){add();draw()}}
+document.addEventListener('keydown',e=>{if(e.key==='ArrowUp')move('up');if(e.key==='ArrowDown')move('down');if(e.key==='ArrowLeft')move('left');if(e.key==='ArrowRight')move('right')});
+init();
+</script></body></html>

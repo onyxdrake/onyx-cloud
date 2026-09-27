@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#0a0a0a">
+  <title>Game — Onyx</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #0a0a0a; color: #eee; min-height: 100vh; padding: 20px; }
+    header { display: flex; align-items: center; gap: 10px; margin-bottom: 20px; }
+    header a { color: #0f0; text-decoration: none; font-size: 20px; }
+    header h1 { font-size: 18px; }
+    .grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; max-width: 500px; margin: 0 auto; }
+    .card { background: #141414; border: 1px solid #1f1f1f; border-radius: 14px; padding: 18px; text-align: center; cursor: pointer; text-decoration: none; color: #eee; display: block; }
+    .card:active { transform: scale(0.96); }
+    .card .icon { font-size: 36px; margin-bottom: 8px; }
+    .card .title { font-size: 14px; font-weight: 600; }
+    .card .desc { font-size: 11px; color: #666; margin-top: 4px; }
+  </style>
+</head>
+<body>
+  <header>
+    <a href="/homescreen.html">←</a>
+    <h1>🎮 Game Onyx</h1>
+  </header>
+  <div class="grid">
+    <a class="card" href="/games/snake.html"><div class="icon">🐍</div><div class="title">Snake</div><div class="desc">Makan, tumbuh</div></a>
+    <a class="card" href="/games/2048.html"><div class="icon">🔢</div><div class="title">2048</div><div class="desc">Gabung angka</div></a>
+    <a class="card" href="/games/memory.html"><div class="icon">🧠</div><div class="title">Memory</div><div class="desc">Cocokkan kartu</div></a>
+    <a class="card" href="/games/tetris.html"><div class="icon">🧱</div><div class="title">Tetris</div><div class="desc">Susun blok</div></a>
+    <a class="card" href="/games/blaze.html"><div class="icon">🔥</div><div class="title">Block Blaze</div><div class="desc">Ledakkan blok</div></a>
+    <a class="card" href="/games/botol.html"><div class="icon">🍾</div><div class="title">Botol Flip</div><div class="desc">Lempar botol</div></a>
+  </div>
+</body>
+</html>

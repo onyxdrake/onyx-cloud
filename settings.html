@@ -1,0 +1,24 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Settings — Onyx</title>
+<style>body{font-family:-apple-system,sans-serif;background:#0a0a0a;color:#eee;padding:16px;max-width:480px;margin:0 auto}.back{color:#0f0;text-decoration:none;font-size:13px}h1{font-size:20px;margin:12px 0;background:linear-gradient(90deg,#0f0,#0ff);-webkit-background-clip:text;-webkit-text-fill-color:transparent}.section-title{font-size:11px;color:#666;text-transform:uppercase;letter-spacing:1.5px;margin:20px 0 8px}.row{display:flex;justify-content:space-between;align-items:center;padding:12px 0;border-bottom:1px solid #141414}.row .label{font-size:14px}.row .desc{font-size:11px;color:#666;margin-top:2px}.switch{width:44px;height:24px;background:#333;border-radius:12px;cursor:pointer;position:relative;transition:background 0.2s}.switch.on{background:#0f0}.switch::after{content:'';position:absolute;top:2px;left:2px;width:20px;height:20px;background:#fff;border-radius:50%;transition:transform 0.2s}.switch.on::after{transform:translateX(20px)}button{width:100%;background:#1a1a1a;color:#0f0;border:1px solid #0f0;padding:12px;border-radius:10px;font-weight:600;font-size:13px;cursor:pointer;margin-top:10px}</style></head>
+<body><a class="back" href="/onyx.html">← Back</a>
+<h1>⚙ Settings</h1>
+<div class="section-title">Permissions</div>
+<div class="row"><div><div class="label">📍 Location</div><div class="desc">For routes & nearby</div></div><div class="switch" onclick="toggle('location')"></div></div>
+<div class="row"><div><div class="label">🔔 Notifications</div><div class="desc">For updates</div></div><div class="switch" onclick="toggle('notif')"></div></div>
+<div class="row"><div><div class="label">💾 Storage</div><div class="desc">Persistent data</div></div><div class="switch on" onclick="toggle('storage')"></div></div>
+<div class="section-title">App</div>
+<button onclick="cekUpdate()">🔄 Check Update</button>
+<button onclick="clearCache()">🗑 Clear Cache</button>
+<div class="section-title">About</div>
+<div class="row"><div class="label">Version</div><div class="desc">1.0.0</div></div>
+<div class="row"><div class="label">Developer</div><div class="desc">Onyx Cloud</div></div>
+<script>
+function toggle(type) {
+  const map = { location: 'geolocation', notif: 'notifications' };
+  if (type === 'location') { navigator.geolocation.getCurrentPosition(() => alert('Location enabled'), () => alert('Location denied')); }
+  if (type === 'notif') { Notification.requestPermission().then(p => alert('Notifications: ' + p)); }
+  if (type === 'storage') { navigator.storage && navigator.storage.persist().then(g => alert('Storage: ' + g)); }
+}
+function cekUpdate() { if ('serviceWorker' in navigator) navigator.serviceWorker.getRegistration().then(r => r && r.update()).then(() => alert('Checked')); }
+function clearCache() { if ('caches' in window) caches.keys().then(k => Promise.all(k.map(c => caches.delete(c)))).then(() => alert('Cache cleared')); }
+</script></body></html>

@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Server Config — Onyx</title>
+<style>
+  body { font-family: -apple-system, sans-serif; background: #0a0a0a; color: #eee; padding: 20px; max-width: 480px; margin: 0 auto; }
+  h1 { color: #0f0; font-size: 20px; }
+  p { color: #888; font-size: 13px; margin-bottom: 16px; }
+  input { width: 100%; background: #141414; border: 1px solid #222; color: #eee; padding: 12px; border-radius: 10px; font-size: 13px; outline: none; font-family: monospace; }
+  input:focus { border-color: #0f0; }
+  button { width: 100%; background: #0f0; color: #000; border: none; padding: 12px; border-radius: 10px; font-weight: 700; font-size: 14px; cursor: pointer; margin-top: 12px; }
+  .msg { padding: 10px; border-radius: 8px; font-size: 13px; margin-top: 10px; display: none; }
+  .msg.ok { background: #1a3a1a; color: #0f0; display: block; }
+</style>
+</head>
+<body>
+  <h1>⚙ Server Configuration</h1>
+  <p>Update server URL. This allows the app to connect to the current server address.</p>
+  <input id="url" placeholder="https://xxx.trycloudflare.com" value="">
+  <button onclick="simpan()">Save URL</button>
+  <div class="msg" id="msg"></div>
+  <script>
+    const saved = localStorage.getItem('onyx_server_url') || '';
+    document.getElementById('url').value = saved;
+    function simpan() {
+      const url = document.getElementById('url').value.trim();
+      if (!url) return;
+      localStorage.setItem('onyx_server_url', url);
+      document.getElementById('msg').className = 'msg ok';
+      document.getElementById('msg').textContent = '✅ URL saved: ' + url;
+    }
+  </script>
+</body>
+</html>

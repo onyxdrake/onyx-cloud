@@ -1,0 +1,25 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Integrations — Onyx</title>
+<style>body{font-family:-apple-system,sans-serif;background:#0a0a0a;color:#eee;padding:16px;max-width:480px;margin:0 auto}.back{color:#0f0;text-decoration:none;font-size:13px}h1{font-size:20px;margin:12px 0;background:linear-gradient(90deg,#0f0,#0ff);-webkit-background-clip:text;-webkit-text-fill-color:transparent}.sub{color:#888;font-size:12px;margin-bottom:16px}.setup{display:block;background:#0f0;color:#000;text-decoration:none;padding:12px;border-radius:10px;text-align:center;font-weight:700;font-size:13px;margin-bottom:12px}.integration{background:#141414;border:1px solid #1f1f1f;border-radius:12px;padding:14px;margin-bottom:10px;display:flex;align-items:center;gap:12px}.integration .icon{font-size:28px}.integration .info{flex:1}.integration .name{font-size:14px;font-weight:600}.integration .desc{font-size:11px;color:#666;margin-top:2px}.integration button{background:#0f0;color:#000;border:none;padding:8px 14px;border-radius:8px;font-weight:600;font-size:12px;cursor:pointer}</style></head>
+<body><a class="back" href="/onyx.html">← Back</a>
+<h1>🔌 Integrations</h1>
+<p class="sub">Connect Onyx to your favorite services.</p>
+<a class="setup" href="/setup-oauth.html">🔧 Setup OAuth (one-time)</a>
+<div id="list"></div>
+<script>
+const LAYANAN = [
+  { id: 'spotify', icon: '🎵', name: 'Spotify', desc: 'Play music, control playlists' },
+  { id: 'google', icon: '📅', name: 'Google (Calendar + Gmail)', desc: 'Schedule & email' },
+  { id: 'github', icon: '🐙', name: 'GitHub', desc: 'Repos, issues, commits' },
+  { id: 'notion', icon: '📝', name: 'Notion', desc: 'Notes & database' },
+  { id: 'slack', icon: '💬', name: 'Slack', desc: 'Team chat' }
+];
+const list = document.getElementById('list');
+const conn = JSON.parse(localStorage.getItem('onyx_integrations') || '{}');
+for (const l of LAYANAN) {
+  const div = document.createElement('div');
+  div.className = 'integration';
+  div.innerHTML = `<div class="icon">${l.icon}</div><div class="info"><div class="name">${l.name}</div><div class="desc">${l.desc}</div></div><button onclick="connect('${l.id}')">${conn[l.id] ? '✓ Active' : 'Connect'}</button>`;
+  list.appendChild(div);
+}
+function connect(id) { window.location.href = '/api/oauth/' + id; }
+</script></body></html>
