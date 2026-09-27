@@ -1,1 +1,54 @@
-
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#0a0a0a">
+<title>Onyx Cloud — 🟢 ONLINE</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: -apple-system, sans-serif; background: #0a0a0a; color: #eee; min-height: 100vh; padding: 20px; }
+  .container { max-width: 600px; margin: 0 auto; }
+  .status { display: inline-block; background: #141414; border: 1px solid #222; padding: 6px 14px; border-radius: 20px; font-size: 12px; color: #0f0; margin-bottom: 16px; }
+  .status::before { content: '●'; margin-right: 6px; animation: blink 1.5s infinite; }
+  @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0.3; } }
+  h1 { font-size: 28px; margin-bottom: 8px; background: linear-gradient(90deg, #0f0, #0ff); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+  .sub { color: #888; font-size: 14px; margin-bottom: 20px; line-height: 1.6; }
+  .btn { display: block; text-align: center; background: #0f0; color: #000; text-decoration: none; padding: 14px; border-radius: 10px; font-weight: 700; font-size: 14px; margin: 12px 0; }
+  .btn-secondary { background: #1a1a1a; color: #0f0; border: 1px solid #0f0; }
+  .offline-note { background: #1a1a1a; border-left: 3px solid #f44; padding: 12px; border-radius: 8px; font-size: 13px; color: #aaa; margin: 12px 0; }
+  .note { font-size: 11px; color: #666; margin-top: 8px; line-height: 1.5; }
+  .info { background: #141414; border: 1px solid #1f1f1f; border-radius: 12px; padding: 16px; margin-bottom: 12px; }
+  .info h3 { color: #0f0; font-size: 14px; margin-bottom: 8px; }
+  .info ul { margin-left: 18px; color: #aaa; font-size: 13px; }
+  .footer { color: #444; font-size: 11px; margin-top: 30px; text-align: center; }
+</style>
+</head>
+<body>
+  <div class="container">
+    <div class="status">🟢 ONLINE</div>
+    <h1>Onyx Cloud</h1>
+    <p class="sub">Onyx is an AI that doesn't just answer — it executes. We combine models, tools, and workflows into one workspace.</p>
+    
+      <a class="btn" href="https://chef-anywhere-saves-vip.trycloudflare.com/onyx.html">📲 Open Onyx</a>
+      <a class="btn btn-secondary" href="https://chef-anywhere-saves-vip.trycloudflare.com/onyx.html">⬇️ Install PWA</a>
+      <p class="note">🔗 Link via Cloudflare Tunnel. If server is off, link disappears.</p>
+    
+    <div class="info">
+      <h3>⚡ What Onyx Can Do</h3>
+      <ul>
+        <li>💬 Multi-language chat</li>
+        <li>💻 Coding & debug</li>
+        <li>🔍 Research & OSINT</li>
+        <li>🎨 Image generation</li>
+        <li>📊 Data analysis</li>
+        <li>🐍 Run Python</li>
+        <li>🔌 Integrations</li>
+      </ul>
+    </div>
+    <div class="footer">
+      © 2026 Onyx Cloud · Status: on · 2026-09-27T15:26:30.616Z
+    </div>
+  </div>
+</body>
+</html>
