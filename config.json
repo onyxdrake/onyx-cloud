@@ -1,0 +1,13 @@
+{
+  "serverUrl": "https://chef-anywhere-saves-vip.trycloudflare.com",
+  "status": "on",
+  "features": [
+    "chat",
+    "coding",
+    "research",
+    "image",
+    "python",
+    "integrations"
+  ],
+  "updated": "2026-09-27T15:26:30.634Z"
+}
