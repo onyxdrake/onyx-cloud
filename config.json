@@ -1,6 +1,6 @@
 {
-  "serverUrl": null,
-  "status": "off",
+  "serverUrl": "https://helping-regular-processor-pens.trycloudflare.com",
+  "status": "on",
   "features": [
     "chat",
     "coding",
@@ -9,5 +9,5 @@
     "python",
     "integrations"
   ],
-  "updated": "2026-09-27T15:30:46.454Z"
+  "updated": "2026-09-27T15:33:09.785Z"
 }
