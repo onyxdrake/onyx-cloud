@@ -1,6 +1,6 @@
 {
-  "serverUrl": null,
-  "status": "off",
+  "serverUrl": "https://prescribed-able-municipal-receives.trycloudflare.com",
+  "status": "on",
   "features": [
     "chat",
     "coding",
@@ -9,6 +9,6 @@
     "python",
     "integrations"
   ],
-  "updated": "2026-09-27T21:47:55.712Z",
+  "updated": "2026-09-27T21:48:43.782Z",
   "version": "1.0.0"
 }
