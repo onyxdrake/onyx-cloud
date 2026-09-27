@@ -1,6 +1,6 @@
 {
-  "serverUrl": "https://horn-colleague-shift-involving.trycloudflare.com",
-  "status": "on",
+  "serverUrl": null,
+  "status": "off",
   "features": [
     "chat",
     "coding",
@@ -9,5 +9,5 @@
     "python",
     "integrations"
   ],
-  "updated": "2026-09-27T15:35:44.816Z"
+  "updated": "2026-09-27T15:37:42.593Z"
 }
