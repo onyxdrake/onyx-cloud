@@ -1,6 +1,6 @@
 {
-  "status": "on",
-  "cloudflareUrl": "https://samuel-automatically-processing-imperial.trycloudflare.com",
-  "updated": "2026-09-27T15:28:50.534Z",
+  "status": "off",
+  "cloudflareUrl": null,
+  "updated": "2026-09-27T15:30:46.453Z",
   "version": "1.0.0"
 }
