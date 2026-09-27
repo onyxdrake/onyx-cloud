@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<meta name="theme-color" content="#0a0a0a">
+<title>Install Onyx</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+  body { font-family: -apple-system, sans-serif; background: #0a0a0a; color: #eee; min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 20px; }
+  .box { background: #141414; border: 1px solid #1f1f1f; border-radius: 16px; padding: 24px; max-width: 400px; width: 100%; text-align: center; }
+  h1 { font-size: 22px; margin-bottom: 8px; background: linear-gradient(90deg, #0f0, #0ff); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+  p { color: #888; font-size: 13px; margin-bottom: 20px; line-height: 1.6; }
+  .btn { display: block; background: #0f0; color: #000; text-decoration: none; padding: 14px; border-radius: 10px; font-weight: 700; font-size: 14px; margin: 10px 0; }
+  .btn-secondary { background: #1a1a1a; color: #0f0; border: 1px solid #0f0; }
+  .status { font-size: 12px; color: #666; margin-top: 16px; }
+  .status.on { color: #0f0; }
+  .status.off { color: #f44; }
+</style>
+</head>
+<body>
+  <div class="box">
+    <h1>📲 Install Onyx</h1>
+    <p>Onyx is installed as a PWA. Tap the button below to open the app, then use Chrome's "Add to Home screen".</p>
+    <a class="btn" id="openBtn" href="#">📲 Open Onyx</a>
+    <a class="btn btn-secondary" id="installBtn" href="#">⬇️ Install PWA</a>
+    <div class="status" id="status">Checking server...</div>
+  </div>
+  <script>
+    async function loadConfig() {
+      try {
+        const res = await fetch('https://raw.githubusercontent.com/onyxdrake/onyx-cloud/main/config.json', { cache: 'no-store' });
+        const config = await res.json();
+        const statusEl = document.getElementById('status');
+        if (config.status === 'on' && config.serverUrl) {
+          statusEl.className = 'status on';
+          statusEl.textContent = '🟢 Server online';
+          document.getElementById('openBtn').href = config.serverUrl + '/onyx.html';
+          document.getElementById('installBtn').href = config.serverUrl + '/onyx.html';
+        } else {
+          statusEl.className = 'status off';
+          statusEl.textContent = '🔴 Server offline. Try again later.';
+        }
+      } catch (e) {
+        document.getElementById('status').textContent = '❌ Failed to load config';
+      }
+    }
+    loadConfig();
+  </script>
+</body>
+</html>
