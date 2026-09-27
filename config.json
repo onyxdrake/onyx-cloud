@@ -1,6 +1,6 @@
 {
-  "serverUrl": null,
-  "status": "off",
+  "serverUrl": "https://renaissance-pages-memorial-frequency.trycloudflare.com",
+  "status": "on",
   "features": [
     "chat",
     "coding",
@@ -9,5 +9,5 @@
     "python",
     "integrations"
   ],
-  "updated": "2026-09-27T15:37:42.593Z"
+  "updated": "2026-09-27T15:46:20.545Z"
 }
