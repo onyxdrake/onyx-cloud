@@ -1,6 +1,6 @@
 {
-  "serverUrl": null,
-  "status": "off",
+  "serverUrl": "https://characterization-convenience-concern-certain.trycloudflare.com",
+  "status": "on",
   "features": [
     "chat",
     "coding",
@@ -9,5 +9,6 @@
     "python",
     "integrations"
   ],
-  "updated": "2026-09-27T16:13:19.909Z"
+  "updated": "2026-09-27T21:32:52.218Z",
+  "version": "1.0.0"
 }
