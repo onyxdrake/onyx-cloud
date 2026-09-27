@@ -1,4 +1,35 @@
+# Dependencies
 node_modules/
-*.db
+
+# Environment
 .env
-tunnel.log
+*.env
+
+# Database
+*.db
+*.db.bak
+*.db.rusak
+
+# Sensitive data
+data/users.json
+data/limits.json
+data/verify-codes.json
+data/verify-codes.json.bak
+data/cloudflare-url.json
+data/netlify-site.json
+data/documents.json
+data/chats/
+data/tmp/
+data/*.db
+
+# Logs
+*.log
+bot/bot.log
+
+# Build
+build/
+dist/
+
+# OS
+.DS_Store
+Thumbs.db
