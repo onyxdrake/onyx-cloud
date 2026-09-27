@@ -1,6 +1,6 @@
 {
-  "serverUrl": "https://samuel-automatically-processing-imperial.trycloudflare.com",
-  "status": "on",
+  "serverUrl": null,
+  "status": "off",
   "features": [
     "chat",
     "coding",
@@ -9,5 +9,5 @@
     "python",
     "integrations"
   ],
-  "updated": "2026-09-27T15:28:50.534Z"
+  "updated": "2026-09-27T15:30:46.454Z"
 }
