@@ -1,6 +1,6 @@
 {
-  "status": "on",
-  "cloudflareUrl": "https://testament-senator-induction-bay.trycloudflare.com",
-  "updated": "2026-09-28T12:41:32.648Z",
+  "status": "off",
+  "cloudflareUrl": null,
+  "updated": "2026-09-28T13:44:56.166Z",
   "version": "1.0.0"
 }
