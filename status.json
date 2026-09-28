@@ -1,6 +1,6 @@
 {
-  "status": "on",
-  "cloudflareUrl": "https://standings-contacts-eastern-dentists.trycloudflare.com",
-  "updated": "2026-09-28T12:13:44.418Z",
+  "status": "off",
+  "cloudflareUrl": null,
+  "updated": "2026-09-28T12:39:49.730Z",
   "version": "1.0.0"
 }
