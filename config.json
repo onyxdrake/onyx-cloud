@@ -1,6 +1,6 @@
 {
-  "serverUrl": "https://standings-contacts-eastern-dentists.trycloudflare.com",
-  "status": "on",
+  "serverUrl": null,
+  "status": "off",
   "features": [
     "chat",
     "coding",
@@ -9,6 +9,6 @@
     "python",
     "integrations"
   ],
-  "updated": "2026-09-28T12:13:44.419Z",
+  "updated": "2026-09-28T12:39:49.731Z",
   "version": "1.0.0"
 }
