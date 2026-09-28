@@ -1,6 +1,6 @@
 {
-  "serverUrl": null,
-  "status": "off",
+  "serverUrl": "https://electronics-practical-economics-dispatch.trycloudflare.com",
+  "status": "on",
   "features": [
     "chat",
     "coding",
@@ -9,6 +9,6 @@
     "python",
     "integrations"
   ],
-  "updated": "2026-09-28T13:44:56.168Z",
+  "updated": "2026-09-28T22:00:23.491Z",
   "version": "1.0.0"
 }
