@@ -1,6 +1,6 @@
 {
-  "serverUrl": "https://testament-senator-induction-bay.trycloudflare.com",
-  "status": "on",
+  "serverUrl": null,
+  "status": "off",
   "features": [
     "chat",
     "coding",
@@ -9,6 +9,6 @@
     "python",
     "integrations"
   ],
-  "updated": "2026-09-28T12:41:32.648Z",
+  "updated": "2026-09-28T13:44:56.168Z",
   "version": "1.0.0"
 }
