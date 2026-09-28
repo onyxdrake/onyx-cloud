@@ -22,6 +22,7 @@ function ekstrakPrompt(pesan) {
 }
 
 async function agentLoop(pesan, mode = 'chat', bahasa = 'EN', personality = 'formal', reasoning = 'medium') {
+  // Deteksi gambar
   if (deteksiGambar(pesan)) {
     const prompt = ekstrakPrompt(pesan);
     const seed = Date.now();
@@ -32,6 +33,7 @@ async function agentLoop(pesan, mode = 'chat', bahasa = 'EN', personality = 'for
     return `${teks}\n\n[IMAGE]${url}[/IMAGE]\n\n— Onyx`;
   }
 
+  // System prompt sesuai bahasa + personality + reasoning
   const system = getSystemPrompt(bahasa, personality, reasoning) + getToolList();
   let history = [{ role: 'user', content: pesan }];
 

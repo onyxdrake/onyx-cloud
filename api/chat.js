@@ -13,6 +13,7 @@ router.post('/chat', async (req, res) => {
 
   const ip = req.headers['x-forwarded-for'] || req.socket.remoteAddress || '127.0.0.1';
   const bahasa = userBahasa || deteksiBahasa(ip);
+  console.log(`[Chat] IP: ${ip} | Lang: ${bahasa} | Personality: ${personality} | Reasoning: ${reasoning}`);
 
   // Hook: onUserMessage
   const hookResult = await hooks.onUserMessage(pesan, userId);
