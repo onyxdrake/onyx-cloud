@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Security Proof — Onyx Cloud</title>
+<style>
+  body { font-family: -apple-system, sans-serif; background: #0a0a0a; color: #eee; padding: 20px; max-width: 720px; margin: 0 auto; line-height: 1.7; font-size: 14px; }
+  .back { color: #0f0; text-decoration: none; font-size: 13px; }
+  h1 { font-size: 26px; margin: 16px 0 8px; background: linear-gradient(90deg, #0f0, #0ff); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+  h2 { color: #0f0; font-size: 16px; margin: 24px 0 10px; text-transform: uppercase; letter-spacing: 1px; }
+  p, li { color: #ccc; }
+  ul { margin-left: 20px; margin-bottom: 12px; }
+  .box { background: #141414; border: 1px solid #1f1f1f; border-left: 3px solid #0f0; border-radius: 10px; padding: 16px; margin: 14px 0; }
+  code { background: #0a0a0a; padding: 2px 6px; border-radius: 4px; color: #0f0; font-size: 12px; }
+  pre { background: #0a0a0a; border: 1px solid #1f1f1f; padding: 12px; border-radius: 8px; overflow-x: auto; color: #0f0; font-size: 11px; }
+  .footer { text-align: center; color: #444; font-size: 11px; margin-top: 40px; padding-top: 20px; border-top: 1px solid #1a1a1a; }
+  .footer a { color: #0f0; text-decoration: none; margin: 0 8px; }
+</style>
+</head>
+<body>
+  <a class="back" href="/">← Back</a>
+  <h1>🔐 Security Proof</h1>
+  <p>This page documents how Onyx Cloud handles your data. We do not store, sell, or share your personal information.</p>
+
+  <h2>1. Password Hashing</h2>
+  <div class="box">
+    <p>Onyx Cloud uses <strong>PBKDF2-SHA512</strong> with <strong>100,000 iterations</strong> to hash passwords.</p>
+    <p>This is the same standard used by 1Password, LastPass, and other password managers.</p>
+    <pre>Hash method: pbkdf2:sha512:100000
+Format: pbkdf2:SALT:HASH
+Storage: data/users.json (encrypted, not readable)</pre>
+    <p>We never store your password in plain text. We cannot read your password.</p>
+  </div>
+
+  <h2>2. What We Store</h2>
+  <div class="box">
+    <ul>
+      <li><strong>Email</strong> — for login and verification</li>
+      <li><strong>Password hash</strong> — not the password itself</li>
+      <li><strong>Chat history</strong> — to improve AI quality</li>
+      <li><strong>Account tier</strong> — free, basic, premium, pro</li>
+    </ul>
+  </div>
+
+  <h2>3. What We Do NOT Store</h2>
+  <div class="box">
+    <ul>
+      <li>Your real name</li>
+      <li>Your location (unless you explicitly allow it)</li>
+      <li>Your contacts</li>
+      <li>Your files</li>
+      <li>Your API keys (they are stored locally on your device)</li>
+    </ul>
+  </div>
+
+  <h2>4. Data Access</h2>
+  <div class="box">
+    <p>We do not access your data. Our server only processes what you send through the chat.</p>
+    <p>If you want proof, you can:</p>
+    <ul>
+      <li>Check <code>data/users.json</code> in our GitHub repo — it only contains email and password hash</li>
+      <li>Check <code>data/chats/</code> — it only contains your chat messages</li>
+      <li>Ask us for a data export — we will provide everything we have</li>
+    </ul>
+  </div>
+
+  <h2>5. No Third Parties</h2>
+  <div class="box">
+    <p>We do not use third-party analytics, tracking, or advertising.</p>
+    <p>We do not share your data with anyone.</p>
+  </div>
+
+  <h2>6. Open Source</h2>
+  <div class="box">
+    <p>Our code is open source. You can audit it yourself:</p>
+    <p><a href="https://github.com/onyxdrake/onyx-cloud" style="color:#0f0;">github.com/onyxdrake/onyx-cloud</a></p>
+  </div>
+
+  <div class="footer">
+    <a href="/">Home</a>
+    <a href="/disclaimer.html">Disclaimer</a>
+    <a href="/docs/privacy.html">Privacy</a>
+  </div>
+</body>
+</html>
