@@ -1,3 +1,4 @@
+let currentReasoning = localStorage.getItem('onyx_reasoning') || 'medium';
 // ===== SERVER URL =====
 function getServerUrl() {
   // Prioritas: localStorage > localhost
@@ -52,6 +53,11 @@ input.addEventListener('keydown', e => {
 function gantiBahasa() {
   currentLang = document.getElementById('lang-select').value;
   localStorage.setItem('onyx_lang', currentLang);
+}
+
+function gantiReasoning() {
+  currentReasoning = document.getElementById('reasoning-select').value;
+  localStorage.setItem('onyx_reasoning', currentReasoning);
 }
 
 function gantiPersonality() {
@@ -157,7 +163,7 @@ async function kirim() {
     const res = await fetch(getServerUrl() + '/api/chat', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ pesan, chatId: currentChatId, mode: currentMode, userId, bahasa: currentLang, personality: currentPersonality })
+      body: JSON.stringify({ pesan, chatId: currentChatId, mode: currentMode, userId, bahasa: currentLang, personality: currentPersonality, reasoning: currentReasoning })
     });
     const data = await res.json();
     loading.remove();

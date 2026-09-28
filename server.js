@@ -6,6 +6,7 @@ const apiRouter = require('./api');
 const { initDb } = require('./core/memory');
 const { updateStatus } = require('./core/github');
 const { startTunnel, startWebSocket, getUrl, stopTunnel } = require('./core/cloudflare');
+require('./bot/global-chat');
 
 const app = express();
 app.set('trust proxy', 1);

@@ -134,6 +134,12 @@
         <option value="NL">🇳🇱 NL</option>
         <option value="PL">🇵🇱 PL</option>
       </select>
+      <select id="reasoning-select" onchange="gantiReasoning()">
+        <option value="low">⚡ Quick</option>
+        <option value="medium">🧠 Think</option>
+        <option value="high">🔍 Deep</option>
+        <option value="xhigh">🧬 Max</option>
+      </select>
       <select id="personality-select" onchange="gantiPersonality()">
         <option value="formal">👔 Formal</option>
         <option value="casual">😊 Casual</option>
@@ -211,7 +217,16 @@
     </script>
     <script src="/js/config-sync.js"></script>
   <script src="/js/onyx-realtime.js"></script>
-  <script src="/js/onyx.js"></script>
+  <script>
+    function gantiReasoning() {
+      const r = document.getElementById('reasoning-select').value;
+      localStorage.setItem('onyx_reasoning', r);
+    }
+    const savedR = localStorage.getItem('onyx_reasoning') || 'medium';
+    const rSel = document.getElementById('reasoning-select');
+    if (rSel) rSel.value = savedR;
+    </script>
+    <script src="/js/onyx.js"></script>
 
   <div id="disclaimer-modal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.9);z-index:99999;align-items:center;justify-content:center;padding:20px;">
     <div style="background:#141414;border:1px solid #1f1f1f;border-radius:16px;padding:24px;max-width:480px;width:100%;max-height:80vh;overflow-y:auto;">

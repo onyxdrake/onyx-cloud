@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<meta name="theme-color" content="#0a0a0a">
+<title>Search — Onyx Cloud</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+  body { font-family: -apple-system, sans-serif; background: #0a0a0a; color: #eee; padding: 16px; max-width: 720px; margin: 0 auto; font-size: 13px; }
+  .back { color: #0f0; text-decoration: none; font-size: 12px; }
+  h1 { font-size: 20px; margin: 12px 0 4px; background: linear-gradient(90deg, #0f0, #0ff); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+  .sub { color: #888; font-size: 12px; margin-bottom: 16px; }
+  .search-box { display: flex; gap: 8px; margin-bottom: 16px; }
+  #query { flex: 1; background: #141414; border: 1px solid #222; color: #eee; padding: 12px; border-radius: 10px; font-size: 13px; outline: none; }
+  #query:focus { border-color: #0f0; }
+  #scope { background: #141414; border: 1px solid #222; color: #0f0; padding: 12px; border-radius: 10px; font-size: 12px; outline: none; }
+  button { background: #0f0; color: #000; border: none; padding: 12px 20px; border-radius: 10px; font-weight: 700; cursor: pointer; }
+  .engines { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-bottom: 16px; }
+  .engine { background: #141414; border: 1px solid #1f1f1f; border-radius: 10px; padding: 10px; text-align: center; text-decoration: none; color: #0f0; font-size: 11px; }
+  .engine:hover { border-color: #0f0; }
+  .result { background: #141414; border: 1px solid #1f1f1f; border-radius: 10px; padding: 12px; margin-bottom: 8px; }
+  .result .source { font-size: 10px; color: #0f0; text-transform: uppercase; margin-bottom: 4px; }
+  .result .text { font-size: 12px; color: #ccc; line-height: 1.5; }
+  .loading { color: #666; font-style: italic; font-size: 12px; }
+</style>
+</head>
+<body>
+  <a class="back" href="/onyx.html">← Back</a>
+  <h1>🔍 Search</h1>
+  <p class="sub">Multi-source search. Web + Dark Web.</p>
+
+  <div class="search-box">
+    <input id="query" placeholder="Search anything..." autocomplete="off">
+    <select id="scope">
+      <option value="web">Web</option>
+      <option value="both">Web + Dark</option>
+    </select>
+    <button onclick="cari()">🔍</button>
+  </div>
+
+  <div class="engines">
+    <a class="engine" href="https://duckduckgo.com" target="_blank">🦆 DDG</a>
+    <a class="engine" href="https://github.com/search" target="_blank">🐙 GitHub</a>
+    <a class="engine" href="https://huggingface.co/models" target="_blank">🤗 HF</a>
+    <a class="engine" href="https://x.ai" target="_blank">🧠 xAI</a>
+    <a class="engine" href="https://ai-sdk.dev" target="_blank">🔧 AI SDK</a>
+    <a class="engine" href="https://groq.com" target="_blank">⚡ Groq</a>
+  </div>
+
+  <div id="results"></div>
+
+  <script>
+    async function cari() {
+      const query = document.getElementById('query').value.trim();
+      const scope = document.getElementById('scope').value;
+      if (!query) return;
+
+      const results = document.getElementById('results');
+      results.innerHTML = '<div class="loading">Searching...</div>';
+
+      try {
+        const userId = localStorage.getItem('onyx_userId') || 'anon';
+        const res = await fetch('/api/search', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ query, scope, userId })
+        });
+        const data = await res.json();
+        results.innerHTML = '';
+        
+        if (data.results && data.results.length > 0) {
+          for (const r of data.results) {
+            const div = document.createElement('div');
+            div.className = 'result';
+            div.innerHTML = `<div class="source">${r.source}</div><div class="text">${r.text}</div>`;
+            results.appendChild(div);
+          }
+        } else {
+          results.innerHTML = '<div class="loading">No results found.</div>';
+        }
+      } catch (e) {
+        results.innerHTML = '<div class="loading">Error: ' + e.message + '</div>';
+      }
+    }
+
+    document.getElementById('query').addEventListener('keydown', e => {
+      if (e.key === 'Enter') cari();
+    });
+  </script>
+</body>
+</html>

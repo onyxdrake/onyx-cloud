@@ -21,7 +21,7 @@ function ekstrakPrompt(pesan) {
   return p.trim() || pesan;
 }
 
-async function agentLoop(pesan, mode = 'chat', bahasa = 'EN', personality = 'formal') {
+async function agentLoop(pesan, mode = 'chat', bahasa = 'EN', personality = 'formal', reasoning = 'medium') {
   if (deteksiGambar(pesan)) {
     const prompt = ekstrakPrompt(pesan);
     const seed = Date.now();
@@ -32,7 +32,7 @@ async function agentLoop(pesan, mode = 'chat', bahasa = 'EN', personality = 'for
     return `${teks}\n\n[IMAGE]${url}[/IMAGE]\n\n— Onyx`;
   }
 
-  const system = getSystemPrompt(bahasa, personality) + getToolList();
+  const system = getSystemPrompt(bahasa, personality, reasoning) + getToolList();
   let history = [{ role: 'user', content: pesan }];
 
   for (let i = 0; i < 6; i++) {

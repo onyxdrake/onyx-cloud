@@ -1,32 +1,45 @@
+const crypto = require('crypto');
 const fs = require('fs');
 const path = require('path');
-const bcrypt = require('bcryptjs');
-const jwt = require('jsonwebtoken');
-const crypto = require('crypto');
 
 const USERS_FILE = path.join(__dirname, '..', 'data', 'users.json');
-const JWT_SECRET = process.env.JWT_SECRET || crypto.randomBytes(32).toString('hex');
 
-// ============ VALIDASI ============
+// ===== HASH PASSWORD PAKE SHA-256 + SALT =====
+function hashPassword(password) {
+  const salt = crypto.randomBytes(32).toString('hex');
+  const hash = crypto.pbkdf2Sync(password, salt, 100000, 64, 'sha512').toString('hex');
+  return `pbkdf2:${salt}:${hash}`;
+}
+
+function verifyPassword(password, stored) {
+  try {
+    const [method, salt, hash] = stored.split(':');
+    if (method !== 'pbkdf2') return false;
+    const verify = crypto.pbkdf2Sync(password, salt, 100000, 64, 'sha512').toString('hex');
+    return hash === verify;
+  } catch { return false; }
+}
+
+// ===== VALIDASI =====
 function validasiEmail(email) {
-  if (!email || typeof email !== 'string') return { ok: false, error: 'Email wajib diisi' };
+  if (!email || typeof email !== 'string') return { ok: false, error: 'Email required' };
   const re = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-  if (!re.test(email)) return { ok: false, error: 'Format email salah' };
-  if (email.length > 100) return { ok: false, error: 'Email terlalu panjang' };
+  if (!re.test(email)) return { ok: false, error: 'Invalid email format' };
+  if (email.length > 100) return { ok: false, error: 'Email too long' };
   return { ok: true };
 }
 
 function validasiPassword(password) {
-  if (!password || typeof password !== 'string') return { ok: false, error: 'Password wajib diisi' };
-  if (password.length < 8) return { ok: false, error: 'Password minimal 8 karakter' };
-  if (password.length > 72) return { ok: false, error: 'Password maksimal 72 karakter' };
-  if (!/[A-Z]/.test(password)) return { ok: false, error: 'Password harus ada huruf besar' };
-  if (!/[a-z]/.test(password)) return { ok: false, error: 'Password harus ada huruf kecil' };
-  if (!/[0-9]/.test(password)) return { ok: false, error: 'Password harus ada angka' };
+  if (!password || typeof password !== 'string') return { ok: false, error: 'Password required' };
+  if (password.length < 8) return { ok: false, error: 'Password min 8 characters' };
+  if (password.length > 72) return { ok: false, error: 'Password max 72 characters' };
+  if (!/[A-Z]/.test(password)) return { ok: false, error: 'Password must have uppercase' };
+  if (!/[a-z]/.test(password)) return { ok: false, error: 'Password must have lowercase' };
+  if (!/[0-9]/.test(password)) return { ok: false, error: 'Password must have number' };
   return { ok: true };
 }
 
-// ============ USER MANAGEMENT ============
+// ===== USER MANAGEMENT =====
 function loadUsers() {
   try { return JSON.parse(fs.readFileSync(USERS_FILE, 'utf8')); }
   catch { return {}; }
@@ -39,26 +52,22 @@ function saveUsers(users) {
 }
 
 async function registerUser(email, password) {
-  // Validasi
   const cekEmail = validasiEmail(email);
   if (!cekEmail.ok) return { ok: false, error: cekEmail.error };
   const cekPass = validasiPassword(password);
   if (!cekPass.ok) return { ok: false, error: cekPass.error };
 
   const users = loadUsers();
+  if (users[email]) return { ok: false, error: 'Email already registered' };
 
-  // Cek duplikat
-  if (users[email]) return { ok: false, error: 'Email udah terdaftar' };
-
-  // Hash password pake bcrypt (cost 12)
-  const hash = await bcrypt.hash(password, 12);
-
+  const hash = hashPassword(password);
   const userId = crypto.createHash('sha256').update(email + Date.now()).digest('hex').slice(0, 16);
 
   users[email] = {
     userId,
     email,
     passwordHash: hash,
+    hashMethod: 'pbkdf2-sha512-100k',
     tier: 'free',
     banned: false,
     createdAt: Date.now(),
@@ -66,53 +75,32 @@ async function registerUser(email, password) {
   };
 
   saveUsers(users);
-  return { ok: true, userId, email };
+  return { ok: true, userId, email, hashMethod: 'pbkdf2-sha512-100k' };
 }
 
 async function loginUser(email, password) {
   const cekEmail = validasiEmail(email);
-  if (!cekEmail.ok) return { ok: false, error: 'Email atau password salah' };
+  if (!cekEmail.ok) return { ok: false, error: 'Email or password wrong' };
 
   const users = loadUsers();
   const user = users[email];
-
-  // Selalu cek password walau user gak ada (biar timing attack gak bisa)
   if (!user) {
-    await bcrypt.hash(password, 12);
-    return { ok: false, error: 'Email atau password salah' };
+    hashPassword(password);
+    return { ok: false, error: 'Email or password wrong' };
   }
 
-  if (user.banned) return { ok: false, error: 'Akun di-ban: ' + (user.banReason || 'Pelanggaran TOS') };
+  if (user.banned) return { ok: false, error: 'Account banned: ' + (user.banReason || 'TOS violation') };
 
-  const cocok = await bcrypt.compare(password, user.passwordHash);
-  if (!cocok) return { ok: false, error: 'Email atau password salah' };
+  const cocok = verifyPassword(password, user.passwordHash);
+  if (!cocok) return { ok: false, error: 'Email or password wrong' };
 
-  // Update last login
   user.lastLogin = Date.now();
   users[email] = user;
   saveUsers(users);
 
-  // Bikin JWT
-  const token = jwt.sign(
-    { userId: user.userId, email: user.email, tier: user.tier },
-    JWT_SECRET,
-    { expiresIn: '7d' }
-  );
+  const token = crypto.createHash('sha256').update(user.userId + Date.now()).digest('hex');
 
-  return { ok: true, token, userId: user.userId, email: user.email, tier: user.tier };
-}
-
-function verifikasiToken(token) {
-  try {
-    return jwt.verify(token, JWT_SECRET);
-  } catch {
-    return null;
-  }
-}
-
-function getUserByEmail(email) {
-  const users = loadUsers();
-  return users[email] || null;
+  return { ok: true, token, userId: user.userId, email: user.email, tier: user.tier, hashMethod: user.hashMethod };
 }
 
 function getUserById(userId) {
@@ -123,25 +111,20 @@ function getUserById(userId) {
   return null;
 }
 
+function getUserByEmail(email) {
+  const users = loadUsers();
+  return users[email] || null;
+}
+
 function deleteUser(email) {
   const users = loadUsers();
   delete users[email];
   saveUsers(users);
 }
 
-function banUser(email, alasan) {
-  const users = loadUsers();
-  if (!users[email]) return { ok: false, error: 'User gak ada' };
-  users[email].banned = true;
-  users[email].banReason = alasan;
-  users[email].bannedAt = Date.now();
-  saveUsers(users);
-  return { ok: true };
-}
-
 module.exports = {
   validasiEmail, validasiPassword,
-  registerUser, loginUser, verifikasiToken,
-  getUserByEmail, getUserById, deleteUser, banUser,
-  JWT_SECRET
+  registerUser, loginUser,
+  getUserByEmail, getUserById, deleteUser,
+  hashPassword, verifyPassword
 };

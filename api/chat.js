@@ -3,16 +3,22 @@ const { agentLoop } = require('../core/agent');
 const memory = require('../core/memory');
 const limits = require('../core/limits');
 const { deteksiBahasa } = require('../core/i18n');
+const { hooks } = require('../core/hooks');
 const router = express.Router();
 
 router.post('/chat', async (req, res) => {
-  const { pesan, chatId, mode = 'chat', userId, bahasa: userBahasa, personality = 'formal' } = req.body;
+  const { pesan, chatId, mode = 'chat', userId, bahasa: userBahasa, personality = 'formal', reasoning = 'medium' } = req.body;
   if (!pesan) return res.json({ balasan: 'Empty message.' });
   if (!userId) return res.json({ balasan: 'Please login first.', needLogin: true });
 
   const ip = req.headers['x-forwarded-for'] || req.socket.remoteAddress || '127.0.0.1';
   const bahasa = userBahasa || deteksiBahasa(ip);
-  console.log(`[Chat] IP: ${ip} | Lang: ${bahasa} | Personality: ${personality}`);
+
+  // Hook: onUserMessage
+  const hookResult = await hooks.onUserMessage(pesan, userId);
+  if (hookResult.block) {
+    return res.json({ balasan: `⚠️ ${hookResult.error}`, blocked: true });
+  }
 
   const tipe = (mode === 'expert') ? 'expert' : (mode === 'coder' ? 'coding' : 'chat');
   const cek = limits.cekLimit(req, tipe);
@@ -22,15 +28,18 @@ router.post('/chat', async (req, res) => {
     let chat = chatId ? memory.getChat(chatId) : null;
     if (!chat) chat = memory.newChat(pesan.slice(0, 30), userId);
     chat.messages.push({ role: 'user', content: pesan, ts: Date.now() });
-    memory.simpanEmbedding(pesan).catch(() => {});
 
-    const balasan = await agentLoop(pesan, mode, bahasa, personality);
+    const balasan = await agentLoop(pesan, mode, bahasa, personality, reasoning);
     chat.messages.push({ role: 'ai', content: balasan, ts: Date.now() });
     memory.saveChat(chat.id, chat);
     limits.increment(cek.userId, tipe);
 
-    res.json({ balasan, chatId: chat.id, mode, bahasa, personality, limit: { tier: cek.tier, sisa: cek.sisa - 1 } });
+    // Hook: onAIResponse
+    await hooks.onAIResponse(balasan, userId);
+
+    res.json({ balasan, chatId: chat.id, mode, bahasa, personality, reasoning, limit: { tier: cek.tier, sisa: cek.sisa - 1 } });
   } catch (e) {
+    await hooks.onError(e, { userId, pesan });
     res.json({ balasan: 'Error: ' + e.message });
   }
 });
