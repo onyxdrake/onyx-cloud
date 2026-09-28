@@ -181,8 +181,8 @@ async function updateStatus(status, info = {}) {
       'faq.html': buatHTMLFAQ(),
       'readme.html': buatHTMLReadme(),
       '_redirects': '/onyx/*  https://' + (info.cloudflareUrl || 'localhost:3000').replace('https://', '') + '/onyx/:splat  200\n/onyx.html  https://' + (info.cloudflareUrl || 'localhost:3000').replace('https://', '') + '/onyx.html  200\n/chat/*  https://' + (info.cloudflareUrl || 'localhost:3000').replace('https://', '') + '/chat/:splat  200',
-      'robots.txt': 'User-agent: *\nAllow: /\nSitemap: https://onyx-cloud-mujmme83.netlify.app/sitemap.xml\n',
-      'sitemap.xml': '<?xml version="1.0" encoding="UTF-8"?><urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"><url><loc>https://onyx-cloud-mujmme83.netlify.app/</loc><priority>1.0</priority></url><url><loc>https://onyx-cloud-mujmme83.netlify.app/how-onyx.html</loc><priority>0.8</priority></url><url><loc>https://onyx-cloud-mujmme83.netlify.app/faq.html</loc><priority>0.8</priority></url><url><loc>https://onyx-cloud-mujmme83.netlify.app/readme.html</loc><priority>0.7</priority></url></urlset>'
+      'robots.txt': 'User-agent: *\nAllow: /\nSitemap: https://onyxdrake.github.io/onyx-cloud/sitemap.xml\n',
+      'sitemap.xml': '<?xml version="1.0" encoding="UTF-8"?><urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"><url><loc>https://onyxdrake.github.io/onyx-cloud/</loc><priority>1.0</priority></url><url><loc>https://onyxdrake.github.io/onyx-cloud/how-onyx.html</loc><priority>0.8</priority></url><url><loc>https://onyxdrake.github.io/onyx-cloud/faq.html</loc><priority>0.8</priority></url><url><loc>https://onyxdrake.github.io/onyx-cloud/readme.html</loc><priority>0.7</priority></url></urlset>'
     };
 
     // Tambahin file verifikasi Google kalo ada
