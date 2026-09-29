@@ -1,5 +1,5 @@
 {
-  "serverUrl": "https://irc-wash-congressional-mba.trycloudflare.com",
+  "serverUrl": "https://metallica-mitsubishi-uses-advisory.trycloudflare.com",
   "status": "on",
   "features": [
     "chat",
@@ -9,6 +9,6 @@
     "python",
     "integrations"
   ],
-  "updated": "2026-09-29T01:23:32.878Z",
+  "updated": "2026-09-29T01:32:36.785Z",
   "version": "1.0.0"
 }
