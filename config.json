@@ -1,6 +1,6 @@
 {
-  "serverUrl": "https://metallica-mitsubishi-uses-advisory.trycloudflare.com",
-  "status": "on",
+  "serverUrl": null,
+  "status": "off",
   "features": [
     "chat",
     "coding",
@@ -9,6 +9,6 @@
     "python",
     "integrations"
   ],
-  "updated": "2026-09-29T01:32:36.785Z",
+  "updated": "2026-09-29T01:49:49.191Z",
   "version": "1.0.0"
 }
