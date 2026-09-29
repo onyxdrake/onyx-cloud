@@ -1,6 +1,6 @@
 {
-  "status": "on",
-  "cloudflareUrl": "https://metallica-mitsubishi-uses-advisory.trycloudflare.com",
-  "updated": "2026-09-29T01:32:36.785Z",
+  "status": "off",
+  "cloudflareUrl": null,
+  "updated": "2026-09-29T01:49:49.190Z",
   "version": "1.0.0"
 }
