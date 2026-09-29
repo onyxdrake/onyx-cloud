@@ -1,6 +1,6 @@
 {
-  "serverUrl": null,
-  "status": "off",
+  "serverUrl": "https://irc-wash-congressional-mba.trycloudflare.com",
+  "status": "on",
   "features": [
     "chat",
     "coding",
@@ -9,6 +9,6 @@
     "python",
     "integrations"
   ],
-  "updated": "2026-09-28T22:23:03.476Z",
+  "updated": "2026-09-29T01:23:32.878Z",
   "version": "1.0.0"
 }
