@@ -1,6 +1,6 @@
 const { tanya } = require('./router');
 const { getToolList, runTool } = require('../tools/registry');
-const { getSystemPrompt, deteksiBahasaPesan } = require('./i18n');
+const { getSystemPrompt } = require('./i18n');
 
 function deteksiGambar(pesan) {
   const keywords = [
@@ -34,9 +34,7 @@ async function agentLoop(pesan, mode = 'chat', bahasa = 'EN', personality = 'for
   }
 
   // System prompt sesuai bahasa + personality + reasoning
-  const bahasaDariPesan = deteksiBahasaPesan(pesan);
-  const bahasaFinal = bahasaDariPesan || bahasa || 'EN';
-  const system = getSystemPrompt(bahasaFinal, personality, reasoning) + getToolList();
+  const system = getSystemPrompt(bahasa, personality, reasoning) + getToolList();
   let history = [{ role: 'user', content: pesan }];
 
   for (let i = 0; i < 6; i++) {

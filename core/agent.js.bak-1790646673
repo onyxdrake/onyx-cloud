@@ -47,12 +47,6 @@ async function agentLoop(pesan, mode = 'chat', bahasa = 'EN', personality = 'for
     for (const m of matches) {
       try {
         const call = JSON.parse(m[1]);
-        const result = await runTool(call.name, call.arguments || {});
-        history.push({ role: 'assistant', content: output });
-        history.push({ role: 'user', content: `Tool result (${call.name}): ${result}` });
-      } catch (e) {
-        history.push({ role: 'user', content: `Error: ${e.message}` });
-      }
     }
   }
   return 'Max iterations.';
