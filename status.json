@@ -1,6 +1,6 @@
 {
-  "status": "on",
-  "cloudflareUrl": "https://separately-melissa-pvc-wanted.trycloudflare.com",
-  "updated": "2026-10-03T16:28:09.930Z",
+  "status": "off",
+  "cloudflareUrl": null,
+  "updated": "2026-10-03T16:31:23.857Z",
   "version": "1.0.0"
 }
