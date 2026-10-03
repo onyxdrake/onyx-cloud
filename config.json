@@ -1,6 +1,6 @@
 {
-  "serverUrl": null,
-  "status": "off",
+  "serverUrl": "https://wave-financing-washing-sudden.trycloudflare.com",
+  "status": "on",
   "features": [
     "chat",
     "coding",
@@ -9,6 +9,6 @@
     "python",
     "integrations"
   ],
-  "updated": "2026-09-29T01:49:49.191Z",
+  "updated": "2026-10-03T16:20:14.792Z",
   "version": "1.0.0"
 }
