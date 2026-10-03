@@ -1,6 +1,6 @@
 {
-  "serverUrl": null,
-  "status": "off",
+  "serverUrl": "https://separately-melissa-pvc-wanted.trycloudflare.com",
+  "status": "on",
   "features": [
     "chat",
     "coding",
@@ -9,6 +9,6 @@
     "python",
     "integrations"
   ],
-  "updated": "2026-10-03T16:27:12.289Z",
+  "updated": "2026-10-03T16:28:09.930Z",
   "version": "1.0.0"
 }
