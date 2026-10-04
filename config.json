@@ -1,6 +1,6 @@
 {
-  "serverUrl": null,
-  "status": "off",
+  "serverUrl": "https://angeles-youth-surgical-laws.trycloudflare.com",
+  "status": "on",
   "features": [
     "chat",
     "coding",
@@ -9,6 +9,6 @@
     "python",
     "integrations"
   ],
-  "updated": "2026-10-04T06:10:29.477Z",
+  "updated": "2026-10-04T06:11:46.357Z",
   "version": "1.0.0"
 }
