@@ -1,6 +1,6 @@
 {
-  "serverUrl": "https://even-avoid-its-seats.trycloudflare.com",
-  "status": "on",
+  "serverUrl": null,
+  "status": "off",
   "features": [
     "chat",
     "coding",
@@ -9,6 +9,6 @@
     "python",
     "integrations"
   ],
-  "updated": "2026-10-04T14:12:07.174Z",
+  "updated": "2026-10-04T14:40:50.765Z",
   "version": "1.0.0"
 }
