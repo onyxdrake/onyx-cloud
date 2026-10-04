@@ -1,6 +1,6 @@
 {
-  "serverUrl": null,
-  "status": "off",
+  "serverUrl": "https://lap-beatles-vocals-sheep.trycloudflare.com",
+  "status": "on",
   "features": [
     "chat",
     "coding",
@@ -9,6 +9,6 @@
     "python",
     "integrations"
   ],
-  "updated": "2026-10-04T05:16:31.659Z",
+  "updated": "2026-10-04T05:43:16.052Z",
   "version": "1.0.0"
 }
