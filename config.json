@@ -1,6 +1,6 @@
 {
-  "serverUrl": "https://count-heart-controller-trends.trycloudflare.com",
-  "status": "on",
+  "serverUrl": null,
+  "status": "off",
   "features": [
     "chat",
     "coding",
@@ -9,6 +9,6 @@
     "python",
     "integrations"
   ],
-  "updated": "2026-10-04T04:36:56.218Z",
+  "updated": "2026-10-04T04:38:19.311Z",
   "version": "1.0.0"
 }
