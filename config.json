@@ -1,6 +1,6 @@
 {
-  "serverUrl": null,
-  "status": "off",
+  "serverUrl": "https://dancing-attributes-stranger-choir.trycloudflare.com",
+  "status": "on",
   "features": [
     "chat",
     "coding",
@@ -9,6 +9,6 @@
     "python",
     "integrations"
   ],
-  "updated": "2026-10-04T06:22:49.396Z",
+  "updated": "2026-10-04T10:46:56.959Z",
   "version": "1.0.0"
 }
