@@ -1,6 +1,6 @@
 {
-  "serverUrl": null,
-  "status": "off",
+  "serverUrl": "https://visitors-travel-airline-charity.trycloudflare.com",
+  "status": "on",
   "features": [
     "chat",
     "coding",
@@ -9,6 +9,6 @@
     "python",
     "integrations"
   ],
-  "updated": "2026-10-04T04:51:55.756Z",
+  "updated": "2026-10-04T05:02:05.523Z",
   "version": "1.0.0"
 }
