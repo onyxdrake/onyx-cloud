@@ -1,6 +1,6 @@
 {
-  "serverUrl": null,
-  "status": "off",
+  "serverUrl": "https://creature-entities-organizer-payroll.trycloudflare.com",
+  "status": "on",
   "features": [
     "chat",
     "coding",
@@ -9,6 +9,6 @@
     "python",
     "integrations"
   ],
-  "updated": "2026-10-04T05:51:24.674Z",
+  "updated": "2026-10-04T05:52:21.444Z",
   "version": "1.0.0"
 }
