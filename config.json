@@ -1,6 +1,6 @@
 {
-  "serverUrl": null,
-  "status": "off",
+  "serverUrl": "https://projectors-jurisdiction-designer-nottingham.trycloudflare.com",
+  "status": "on",
   "features": [
     "chat",
     "coding",
@@ -9,6 +9,6 @@
     "python",
     "integrations"
   ],
-  "updated": "2026-10-04T04:38:19.311Z",
+  "updated": "2026-10-04T04:40:08.220Z",
   "version": "1.0.0"
 }
