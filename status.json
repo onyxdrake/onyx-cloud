@@ -1,6 +1,6 @@
 {
-  "status": "off",
-  "cloudflareUrl": null,
-  "updated": "2026-10-03T16:31:23.857Z",
+  "status": "on",
+  "cloudflareUrl": "https://count-heart-controller-trends.trycloudflare.com",
+  "updated": "2026-10-04T04:36:56.218Z",
   "version": "1.0.0"
 }
