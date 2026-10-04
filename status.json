@@ -1,6 +1,6 @@
 {
-  "status": "on",
-  "cloudflareUrl": "https://visitors-travel-airline-charity.trycloudflare.com",
-  "updated": "2026-10-04T05:02:05.523Z",
+  "status": "off",
+  "cloudflareUrl": null,
+  "updated": "2026-10-04T05:16:31.658Z",
   "version": "1.0.0"
 }
