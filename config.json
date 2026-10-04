@@ -1,6 +1,6 @@
 {
-  "serverUrl": null,
-  "status": "off",
+  "serverUrl": "https://pleasant-competition-guards-listprice.trycloudflare.com",
+  "status": "on",
   "features": [
     "chat",
     "coding",
@@ -9,6 +9,6 @@
     "python",
     "integrations"
   ],
-  "updated": "2026-10-04T15:43:54.343Z",
+  "updated": "2026-10-04T15:45:09.144Z",
   "version": "1.0.0"
 }
