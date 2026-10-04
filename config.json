@@ -1,6 +1,6 @@
 {
-  "serverUrl": "https://minus-latest-television-mating.trycloudflare.com",
-  "status": "on",
+  "serverUrl": null,
+  "status": "off",
   "features": [
     "chat",
     "coding",
@@ -9,6 +9,6 @@
     "python",
     "integrations"
   ],
-  "updated": "2026-10-04T14:44:24.343Z",
+  "updated": "2026-10-04T15:43:51.157Z",
   "version": "1.0.0"
 }
