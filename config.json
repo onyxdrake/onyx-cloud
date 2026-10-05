@@ -1,6 +1,6 @@
 {
-  "serverUrl": null,
-  "status": "off",
+  "serverUrl": "https://discrete-international-enhancements-facilitate.trycloudflare.com",
+  "status": "on",
   "features": [
     "chat",
     "coding",
@@ -9,6 +9,6 @@
     "python",
     "integrations"
   ],
-  "updated": "2026-10-05T10:49:29.042Z",
+  "updated": "2026-10-05T11:42:57.261Z",
   "version": "1.0.0"
 }
