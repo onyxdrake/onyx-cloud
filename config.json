@@ -1,5 +1,5 @@
 {
-  "serverUrl": "https://oct-pmid-grew-hampton.trycloudflare.com",
+  "serverUrl": "https://peripherals-thru-son-spice.trycloudflare.com",
   "status": "on",
   "features": [
     "chat",
@@ -9,6 +9,6 @@
     "python",
     "integrations"
   ],
-  "updated": "2026-10-05T13:57:05.997Z",
+  "updated": "2026-10-05T16:14:08.201Z",
   "version": "1.0.0"
 }
