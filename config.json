@@ -1,6 +1,6 @@
 {
-  "serverUrl": "https://peripherals-thru-son-spice.trycloudflare.com",
-  "status": "on",
+  "serverUrl": null,
+  "status": "off",
   "features": [
     "chat",
     "coding",
@@ -9,6 +9,6 @@
     "python",
     "integrations"
   ],
-  "updated": "2026-10-05T16:14:08.201Z",
+  "updated": "2026-10-05T16:22:32.065Z",
   "version": "1.0.0"
 }
