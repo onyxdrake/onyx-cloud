@@ -1,6 +1,6 @@
 {
-  "serverUrl": "https://allowance-receptor-proposed-instruments.trycloudflare.com",
-  "status": "on",
+  "serverUrl": null,
+  "status": "off",
   "features": [
     "chat",
     "coding",
@@ -9,6 +9,6 @@
     "python",
     "integrations"
   ],
-  "updated": "2026-10-05T10:35:54.801Z",
+  "updated": "2026-10-05T10:49:25.558Z",
   "version": "1.0.0"
 }
