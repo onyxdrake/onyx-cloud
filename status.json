@@ -1,6 +1,6 @@
 {
-  "status": "on",
-  "cloudflareUrl": "https://allowance-receptor-proposed-instruments.trycloudflare.com",
-  "updated": "2026-10-05T10:35:54.800Z",
+  "status": "off",
+  "cloudflareUrl": null,
+  "updated": "2026-10-05T10:49:25.558Z",
   "version": "1.0.0"
 }
