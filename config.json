@@ -1,6 +1,6 @@
 {
-  "serverUrl": null,
-  "status": "off",
+  "serverUrl": "https://description-kay-guru-fixes.trycloudflare.com",
+  "status": "on",
   "features": [
     "chat",
     "coding",
@@ -9,6 +9,6 @@
     "python",
     "integrations"
   ],
-  "updated": "2026-10-06T05:21:57.319Z",
+  "updated": "2026-10-07T10:23:11.231Z",
   "version": "1.0.0"
 }
