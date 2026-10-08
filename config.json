@@ -1,6 +1,6 @@
 {
-  "serverUrl": null,
-  "status": "off",
+  "serverUrl": "https://star-jvc-substance-towers.trycloudflare.com",
+  "status": "on",
   "features": [
     "chat",
     "coding",
@@ -9,6 +9,6 @@
     "python",
     "integrations"
   ],
-  "updated": "2026-10-08T00:29:00.231Z",
+  "updated": "2026-10-08T00:31:04.782Z",
   "version": "1.0.0"
 }
