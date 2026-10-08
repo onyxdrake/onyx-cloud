@@ -1,5 +1,5 @@
 {
-  "serverUrl": "https://consistency-earthquake-practical-provide.trycloudflare.com",
+  "serverUrl": "https://forest-algorithms-locks-badge.trycloudflare.com",
   "status": "on",
   "features": [
     "chat",
@@ -9,6 +9,6 @@
     "python",
     "integrations"
   ],
-  "updated": "2026-10-08T06:41:08.724Z",
+  "updated": "2026-10-08T16:44:06.927Z",
   "version": "1.0.0"
 }
