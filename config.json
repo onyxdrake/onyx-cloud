@@ -1,5 +1,5 @@
 {
-  "serverUrl": "https://gmbh-colours-masters-gore.trycloudflare.com",
+  "serverUrl": "https://burner-analytical-integral-forecast.trycloudflare.com",
   "status": "on",
   "features": [
     "chat",
@@ -9,6 +9,6 @@
     "python",
     "integrations"
   ],
-  "updated": "2026-10-13T11:10:44.789Z",
+  "updated": "2026-10-13T11:22:40.946Z",
   "version": "1.0.0"
 }
