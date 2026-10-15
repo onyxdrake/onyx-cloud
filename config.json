@@ -1,5 +1,5 @@
 {
-  "serverUrl": "https://pathology-groups-assumed-our.trycloudflare.com",
+  "serverUrl": "https://writing-feeling-emails-steve.trycloudflare.com",
   "status": "on",
   "features": [
     "chat",
@@ -9,6 +9,6 @@
     "python",
     "integrations"
   ],
-  "updated": "2026-10-15T14:12:35.539Z",
+  "updated": "2026-10-15T14:13:52.654Z",
   "version": "1.0.0"
 }
