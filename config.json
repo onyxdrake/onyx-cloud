@@ -1,5 +1,5 @@
 {
-  "serverUrl": "https://epic-shake-fifteen-providence.trycloudflare.com",
+  "serverUrl": "https://legacy-medium-wrapped-limousines.trycloudflare.com",
   "status": "on",
   "features": [
     "chat",
@@ -9,6 +9,6 @@
     "python",
     "integrations"
   ],
-  "updated": "2026-10-16T06:27:00.965Z",
+  "updated": "2026-10-16T15:56:30.433Z",
   "version": "1.0.0"
 }
