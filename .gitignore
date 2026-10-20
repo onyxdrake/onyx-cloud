@@ -15,3 +15,11 @@ backups/
 *.log
 *.tar.gz
 .DS_Store
+
+# Backup & Trash (JANGAN DI-PUSH)
+_backup/
+_trash/
+*.zip
+*.tgz
+__pycache__/
+services/__pycache__/
