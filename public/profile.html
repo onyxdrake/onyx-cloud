@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#0a0a0a">
+  <title>Profil — Onyx</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #0a0a0a; color: #eee; min-height: 100vh; padding: 20px; }
+    .box { max-width: 500px; margin: 0 auto; }
+    .back { display: inline-block; color: #0f0; text-decoration: none; margin-bottom: 20px; font-size: 14px; }
+    h1 { font-size: 22px; margin-bottom: 16px; background: linear-gradient(90deg, #0f0, #0ff); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+    label { display: block; font-size: 13px; color: #aaa; margin-bottom: 6px; margin-top: 14px; }
+    input, select, textarea { width: 100%; background: #141414; border: 1px solid #222; color: #eee; padding: 10px 12px; border-radius: 8px; font-size: 13px; outline: none; font-family: inherit; }
+    input:focus, select:focus, textarea:focus { border-color: #0f0; }
+    button { width: 100%; background: #0f0; color: #000; border: none; padding: 12px; border-radius: 10px; font-weight: 700; cursor: pointer; margin-top: 20px; }
+    .msg { padding: 10px; border-radius: 8px; font-size: 13px; margin-top: 12px; display: none; }
+    .msg.ok { background: #1a3a1a; color: #0f0; display: block; }
+  </style>
+</head>
+<body>
+  <div class="box">
+    <a class="back" href="/onyx.html">← Balik</a>
+    <h1>👤 Profil & Preferensi</h1>
+
+    <label>Nama Panggilan</label>
+    <input id="nama" placeholder="Misal: Onyx" maxlength="30">
+
+    <label>Gaya Chat AI</label>
+    <select id="gaya">
+      <option value="ramah">🤝 Ramah & Santai</option>
+      <option value="formal">👔 Formal</option>
+      <option value="tegas">⚡ Tegas & Langsung</option>
+      <option value="lucu">😄 Lucu</option>
+      <option value="filsuf">🧠 Filsuf</option>
+    </select>
+
+    <label>Bahasa</label>
+    <select id="bahasa">
+      <option value="id">🇮🇩 Indonesia</option>
+      <option value="en">🇬🇧 English</option>
+    </select>
+
+    <label>Instruksi Khusus (opsional)</label>
+    <textarea id="instruksi" rows="3" placeholder="Misal: Selalu panggil aku 'Bos'"></textarea>
+
+    <button onclick="simpan()">💾 Simpan</button>
+    <div class="msg" id="msg"></div>
+  </div>
+  <script>
+    // Load preferensi
+    const prefs = JSON.parse(localStorage.getItem('onyx_prefs') || '{}');
+    if (prefs.nama) document.getElementById('nama').value = prefs.nama;
+    if (prefs.gaya) document.getElementById('gaya').value = prefs.gaya;
+    if (prefs.bahasa) document.getElementById('bahasa').value = prefs.bahasa;
+    if (prefs.instruksi) document.getElementById('instruksi').value = prefs.instruksi;
+
+    function simpan() {
+      const prefs = {
+        nama: document.getElementById('nama').value.trim(),
+        gaya: document.getElementById('gaya').value,
+        bahasa: document.getElementById('bahasa').value,
+        instruksi: document.getElementById('instruksi').value.trim()
+      };
+      localStorage.setItem('onyx_prefs', JSON.stringify(prefs));
+      const msg = document.getElementById('msg');
+      msg.className = 'msg ok';
+      msg.textContent = '✅ Preferensi disimpen!';
+      setTimeout(() => msg.className = 'msg', 2000);
+    }
+  </script>
+</body>
+</html>

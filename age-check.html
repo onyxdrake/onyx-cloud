@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<meta name="theme-color" content="#0a0a0a">
+<title>Age Verification — Onyx Cloud</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+  body { font-family: -apple-system, sans-serif; background: #0a0a0a; color: #eee; min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 20px; }
+  .box { background: #141414; border: 1px solid #1f1f1f; border-radius: 16px; padding: 28px; max-width: 420px; width: 100%; text-align: center; }
+  h1 { font-size: 22px; margin-bottom: 8px; background: linear-gradient(90deg, #0f0, #0ff); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+  p { color: #888; font-size: 13px; margin-bottom: 20px; line-height: 1.6; }
+  input { width: 100%; background: #0a0a0a; border: 1px solid #222; color: #eee; padding: 12px; border-radius: 10px; font-size: 14px; outline: none; text-align: center; }
+  input:focus { border-color: #0f0; }
+  button { width: 100%; background: #0f0; color: #000; border: none; padding: 14px; border-radius: 10px; font-weight: 700; font-size: 14px; cursor: pointer; margin-top: 12px; }
+  .notice { background: #1a1a1a; border-left: 3px solid #0f0; padding: 12px; border-radius: 8px; font-size: 11px; color: #aaa; margin-top: 16px; line-height: 1.6; text-align: left; }
+</style>
+</head>
+<body>
+  <div class="box">
+    <h1>🔞 Age Verification</h1>
+    <p>Onyx Cloud is intended for users 18 years and older. Please enter your birth year.</p>
+    <input id="year" type="number" placeholder="Birth year (e.g. 2000)" min="1900" max="2030">
+    <button onclick="verify()">Verify Age</button>
+    <div class="notice">
+      ⚠️ By entering, you confirm you are 18+. If you are under 18, please leave.<br><br>
+      We do not store your birth year. This is only for age verification.
+    </div>
+  </div>
+  <script>
+    function verify() {
+      const year = parseInt(document.getElementById('year').value);
+      const current = new Date().getFullYear();
+      if (!year || year < 1900 || year > current) {
+        alert('Invalid year');
+        return;
+      }
+      const age = current - year;
+      if (age < 18) {
+        alert('You must be 18 or older.');
+        return;
+      }
+      localStorage.setItem('onyx_age_verified', '1');
+      localStorage.setItem('onyx_age', age);
+      window.location.href = '/onyx.html';
+    }
+  </script>
+</body>
+</html>

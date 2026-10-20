@@ -1,0 +1,50 @@
+const CACHE = 'onyx-v4';
+const ASSETS = [
+  '/homescreen.html',
+  '/onyx.html',
+  '/offline.html',
+  '/manifest.json',
+  '/js/onyx.js',
+  '/js/reconnect.js'
+];
+
+self.addEventListener('install', e => {
+  self.skipWaiting();
+  e.waitUntil(caches.open(CACHE).then(c => c.addAll(ASSETS)));
+});
+
+self.addEventListener('activate', e => {
+  e.waitUntil(
+    caches.keys().then(keys => Promise.all(
+      keys.filter(k => k !== CACHE).map(k => caches.delete(k))
+    )).then(() => {
+      // Ambil alih tab yang masih pakai SW lama
+      return self.clients.matchAll({ type: 'window' }).then(clients => {
+        clients.forEach(client => client.postMessage({ type: 'SW_UPDATED' }));
+      });
+    })
+  );
+  // Gak panggil clients.claim() — biar tab lama gak keganggu
+});
+
+self.addEventListener('fetch', e => {
+  // Skip API requests
+  if (e.request.url.includes('/api/')) {
+    return;
+  }
+
+  e.respondWith(
+    fetch(e.request).then(res => {
+      const copy = res.clone();
+      caches.open(CACHE).then(c => c.put(e.request, copy));
+      return res;
+    }).catch(() => {
+      // Kalau fetch gagal, tampilin offline.html
+      return caches.match(e.request).then(r => r || caches.match('/offline.html'));
+    })
+  );
+});
+
+self.addEventListener('message', e => {
+  if (e.data && e.data.type === 'SKIP_WAITING') self.skipWaiting();
+});

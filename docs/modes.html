@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#0a0a0a">
+  <title>5 Mode Onyx — Onyx AI</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #0a0a0a; color: #eee; line-height: 1.7; padding: 20px; max-width: 720px; margin: 0 auto; }
+    a { color: #0f0; }
+    h1 { font-size: 26px; background: linear-gradient(90deg, #0f0, #0ff); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 6px; }
+    h2 { font-size: 18px; margin: 24px 0 10px; border-bottom: 1px solid #1f1f1f; padding-bottom: 6px; }
+    p { margin-bottom: 12px; color: #ccc; font-size: 14px; }
+    .mode { background: #141414; border: 1px solid #1f1f1f; border-radius: 12px; padding: 16px; margin: 12px 0; }
+    .mode h3 { font-size: 16px; margin-bottom: 6px; }
+    .mode .icon { font-size: 24px; margin-right: 8px; }
+    .mode .tag { display: inline-block; background: #0f0; color: #000; font-size: 10px; padding: 2px 8px; border-radius: 8px; font-weight: 700; margin-left: 6px; }
+    .mode ul { margin: 8px 0 0 20px; font-size: 13px; color: #aaa; }
+    .back { display: inline-block; margin-bottom: 20px; color: #0f0; text-decoration: none; font-size: 14px; }
+    .footer { margin-top: 40px; padding-top: 20px; border-top: 1px solid #1f1f1f; font-size: 12px; color: #666; text-align: center; }
+  </style>
+</head>
+<body>
+  <a class="back" href="/homescreen.html">← Balik ke Onyx</a>
+
+  <h1>🧩 5 Mode Onyx</h1>
+  <p>Onyx punya 5 mode. Tiap mode punya <b>cara berpikir</b> dan <b>kemampuan</b> yang beda. Pilih mode sesuai kebutuhan lo.</p>
+
+  <div class="mode">
+    <h3><span class="icon">⚡</span>Operator<span class="tag">DEFAULT</span></h3>
+    <p><b>Cocok buat:</b> Tugas sehari-hari, tanya jawab cepat, cari info.</p>
+    <p><b>Cara kerja:</b> Onyx langsung eksekusi. Kalau butuh data, dia cari. Kalau udah cukup, dia jawab.</p>
+    <ul>
+      <li>Cari internet (DuckDuckGo)</li>
+      <li>Cari kode (GitHub)</li>
+      <li>Ambil isi halaman (fetch)</li>
+      <li>Generate gambar</li>
+    </ul>
+  </div>
+
+  <div class="mode">
+    <h3><span class="icon">🧠</span>Reasoner</h3>
+    <p><b>Cocok buat:</b> Pertanyaan rumit, analisis mendalam, debat, filsafat.</p>
+    <p><b>Cara kerja:</b> Onyx mikir <b>6 langkah</b>:
+      <ol>
+        <li>Uraikan pertanyaan</li>
+        <li>Bikin hipotesis</li>
+        <li>Uji bukti</li>
+        <li>Cek kontradiksi</li>
+        <li>Sintesis</li>
+        <li>Kritik diri</li>
+      </ol>
+    </p>
+    <ul>
+      <li>Multi-step thinking</li>
+      <li>Self-critique</li>
+      <li>Logic chain</li>
+      <li>Cari bukti dulu sebelum jawab</li>
+    </ul>
+  </div>
+
+  <div class="mode">
+    <h3><span class="icon">💻</span>Coder</h3>
+    <p><b>Cocok buat:</b> Bikin program, debug, belajar coding.</p>
+    <p><b>Cara kerja:</b> Onyx tulis kode, <b>jalanin</b>, baca error, benerin, ulang. Kayak programmer beneran.</p>
+    <ul>
+      <li>Tulis kode lengkap</li>
+      <li>Jalanin kode (Python/Node.js)</li>
+      <li>Auto-debug</li>
+      <li>Cari referensi di GitHub</li>
+    </ul>
+  </div>
+
+  <div class="mode">
+    <h3><span class="icon">🔍</span>Researcher</h3>
+    <p><b>Cocok buat:</b> Riset serius, OSINT, cek fakta, investigasi.</p>
+    <p><b>Cara kerja:</b> Onyx cari dari <b>banyak sumber</b>, cross-check, verifikasi, baru lapor. Gak asal percaya.</p>
+    <ul>
+      <li>Cari multi-sumber</li>
+      <li>Cross-check</li>
+      <li>Verifikasi</li>
+      <li>Laporan + sumber</li>
+    </ul>
+  </div>
+
+  <div class="mode">
+    <h3><span class="icon">🎨</span>Creator</h3>
+    <p><b>Cocok buat:</b> Bikin konten, gambar, cerita, ide.</p>
+    <p><b>Cara kerja:</b> Onyx kasih <b>2-3 ide</b>, pilih yang terbaik, generate, revisi kalau perlu.</p>
+    <ul>
+      <li>Generate gambar (Pollinations)</li>
+      <li>Bikin cerita</li>
+      <li>Kasih ide kreatif</li>
+      <li>Revisi sesuai request</li>
+    </ul>
+  </div>
+
+  <h2>📊 Perbandingan</h2>
+  <table style="width:100%;border-collapse:collapse;font-size:13px;">
+    <tr style="background:#141414;">
+      <th style="padding:8px;text-align:left;border-bottom:1px solid #1f1f1f;">Mode</th>
+      <th style="padding:8px;text-align:left;border-bottom:1px solid #1f1f1f;">Kecepatan</th>
+      <th style="padding:8px;text-align:left;border-bottom:1px solid #1f1f1f;">Kedalaman</th>
+    </tr>
+    <tr><td style="padding:8px;border-bottom:1px solid #141414;">⚡ Operator</td><td style="padding:8px;border-bottom:1px solid #141414;">Cepat</td><td style="padding:8px;border-bottom:1px solid #141414;">Sedang</td></tr>
+    <tr><td style="padding:8px;border-bottom:1px solid #141414;">🧠 Reasoner</td><td style="padding:8px;border-bottom:1px solid #141414;">Lambat</td><td style="padding:8px;border-bottom:1px solid #141414;">Dalam</td></tr>
+    <tr><td style="padding:8px;border-bottom:1px solid #141414;">💻 Coder</td><td style="padding:8px;border-bottom:1px solid #141414;">Sedang</td><td style="padding:8px;border-bottom:1px solid #141414;">Dalam</td></tr>
+    <tr><td style="padding:8px;border-bottom:1px solid #141414;">🔍 Researcher</td><td style="padding:8px;border-bottom:1px solid #141414;">Lambat</td><td style="padding:8px;border-bottom:1px solid #141414;">Dalam</td></tr>
+    <tr><td style="padding:8px;">🎨 Creator</td><td style="padding:8px;">Sedang</td><td style="padding:8px;">Sedang</td></tr>
+  </table>
+
+  <div class="footer">
+    <p><a href="/docs/about.html">Tentang</a> · <a href="/docs/support.html">Lapor Error</a> · <a href="/homescreen.html">Beranda</a></p>
+  </div>
+</body>
+</html>

@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#0a0a0a">
+  <title>Lapor Error — Onyx AI</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #0a0a0a; color: #eee; line-height: 1.7; padding: 20px; max-width: 720px; margin: 0 auto; }
+    a { color: #0f0; }
+    h1 { font-size: 26px; background: linear-gradient(90deg, #0f0, #0ff); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 6px; }
+    h2 { font-size: 18px; color: #0f0; margin: 24px 0 10px; border-bottom: 1px solid #1f1f1f; padding-bottom: 6px; }
+    p { margin-bottom: 12px; color: #ccc; font-size: 14px; }
+    .contact { background: #141414; border: 1px solid #1f1f1f; border-radius: 12px; padding: 16px; margin: 12px 0; }
+    .contact .label { font-size: 11px; color: #666; text-transform: uppercase; letter-spacing: 1px; }
+    .contact .value { font-size: 16px; color: #0f0; font-weight: 600; margin-top: 4px; word-break: break-all; }
+    .contact a { text-decoration: none; }
+    .btn { display: block; text-align: center; background: #0f0; color: #000; text-decoration: none; padding: 12px; border-radius: 10px; font-weight: 700; margin-top: 10px; font-size: 14px; }
+    .btn:active { background: #0c0; }
+    .btn-tg { background: #29a9eb; color: #fff; }
+    ol, ul { margin-left: 20px; margin-bottom: 12px; color: #ccc; font-size: 14px; }
+    li { margin-bottom: 6px; }
+    .back { display: inline-block; margin-bottom: 20px; color: #0f0; text-decoration: none; font-size: 14px; }
+    .footer { margin-top: 40px; padding-top: 20px; border-top: 1px solid #1f1f1f; font-size: 12px; color: #666; text-align: center; }
+  </style>
+</head>
+<body>
+  <a class="back" href="/homescreen.html">← Balik ke Onyx</a>
+
+  <h1>🆘 Lapor Error</h1>
+  <p>Kalau lo nemu bug, error, atau ada yang aneh di Onyx — lapor ke kami. Kami baca <b>semua</b> laporan.</p>
+
+  <h2>📞 Kontak Resmi</h2>
+
+  <div class="contact">
+    <div class="label">📧 Email</div>
+    <div class="value">onyxdrake.ai@gmail.com</div>
+    <a class="btn" href="mailto:onyxdrake.ai@gmail.com?subject=Laporan%20Error%20Onyx&body=Mode%3A%0AVersi%3A%0ADevice%3A%0AError%3A%0ALangkah%20reproduksi%3A%0A">Kirim Email</a>
+  </div>
+
+  <div class="contact">
+    <div class="label">💬 Telegram</div>
+    <div class="value">+44 7915 269661</div>
+    <a class="btn btn-tg" href="https://t.me/447915269661">Chat Telegram</a>
+  </div>
+
+  <h2>📝 Format Laporan</h2>
+  <p>Biar cepet ditangani, kirim laporan dengan format ini:</p>
+  <ol>
+    <li><b>Mode:</b> (Operator / Reasoner / Coder / Researcher / Creator)</li>
+    <li><b>Versi Onyx:</b> (liat di Setelan)</li>
+    <li><b>Device:</b> (HP / Laptop / PC — sebutin OS-nya)</li>
+    <li><b>Error:</b> (tulis pesan error-nya persis)</li>
+    <li><b>Langkah reproduksi:</b> (gimana caranya sampe error)</li>
+    <li><b>Screenshot:</b> (kalau ada)</li>
+  </ol>
+
+  <h2>⏱️ Waktu Respon</h2>
+  <ul>
+    <li><b>Email:</b> 1-3 hari kerja</li>
+    <li><b>Telegram:</b> 1-24 jam (kalau online)</li>
+  </ul>
+
+  <h2>🚨 Error yang Sering Terjadi</h2>
+
+  <p><b>1. "Semua model gagal"</b></p>
+  <ul>
+    <li>Cek: <code>llama-server</code> jalan?</li>
+    <li>Cek: <code>.env</code> ada API key Groq/Cerebras?</li>
+    <li>Solusi: restart server</li>
+  </ul>
+
+  <p><b>2. "Gagal generate gambar"</b></p>
+  <ul>
+    <li>Pollinations kadang lambat/down.</li>
+    <li>Coba lagi 1-2 menit.</li>
+    <li>Kalau masih gagal, lapor.</li>
+  </ul>
+
+  <p><b>3. Chat gak kesimpen</b></p>
+  <ul>
+    <li>Cek: folder <code>data/chats/</code> ada?</li>
+    <li>Cek: server punya izin tulis?</li>
+    <li>Solusi: restart server</li>
+  </ul>
+
+  <p><b>4. PWA gak bisa di-install</b></p>
+  <ul>
+    <li>Chrome HP kadang gak fire <code>beforeinstallprompt</code>.</li>
+    <li>Solusi: menu Chrome → "Add to Home screen".</li>
+  </ul>
+
+  <h2>🙏 Terima Kasih</h2>
+  <p>Onyx dibangun dari <b>feedback user</b>. Laporan lo bikin Onyx lebih baik. Jangan ragu buat lapor, sekecil apa pun masalahnya.</p>
+
+  <div class="footer">
+    <p><a href="/docs/about.html">Tentang</a> · <a href="/docs/modes.html">5 Mode</a> · <a href="/homescreen.html">Beranda</a></p>
+  </div>
+</body>
+</html>

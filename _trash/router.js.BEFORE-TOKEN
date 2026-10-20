@@ -1,0 +1,153 @@
+require('dotenv').config();
+const fs = require('fs');
+const path = require('path');
+
+const GROQ_KEY = process.env.GROQ_API_KEY;
+const CEREBRAS_KEY = process.env.CEREBRAS_API_KEY;
+const SYSTEM_FILE = path.join(__dirname, '..', 'system.txt');
+
+function getSystem() {
+  try { return fs.readFileSync(SYSTEM_FILE, 'utf8'); }
+  catch { return 'Kamu Onyx. Jawab pake Bahasa Indonesia.'; }
+}
+
+async function fetchWithTimeout(url, options, timeout = 60000) {
+  const controller = new AbortController();
+  const id = setTimeout(() => controller.abort(), timeout);
+  try {
+    const res = await fetch(url, { ...options, signal: controller.signal });
+    clearTimeout(id);
+    return res;
+  } catch (e) { clearTimeout(id); throw e; }
+}
+
+async function localModel(messages, system) {
+  try {
+    const sys = system || getSystem();
+    const res = await fetchWithTimeout('http://127.0.0.1:8080/v1/chat/completions', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ model: 'onyx', messages: [{ role: 'system', content: sys }, ...messages], max_tokens: 1024, temperature: 0.7 })
+    }, 90000);
+    if (!res.ok) return null;
+    const data = await res.json();
+    const hasil = data.choices?.[0]?.message?.content;
+    if (!hasil || hasil.trim().length < 2) return null;
+    console.log('[Local] OK');
+    return hasil;
+  } catch (e) { console.log('[Local] Error:', e.message); return null; }
+}
+
+async function groq(messages, system, tools = null) {
+  if (!GROQ_KEY || GROQ_KEY.includes('isi_')) { console.log('[Groq] No key'); return null; }
+  const models = ['openai/gpt-oss-20b', 'openai/gpt-oss-120b', 'qwen/qwen3.8-27b'];
+  for (const model of models) {
+    try {
+      const sys = system || getSystem();
+      const res = await fetchWithTimeout('https://api.groq.com/openai/v1/chat/completions', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${GROQ_KEY}` },
+        body: JSON.stringify({
+          model,
+          messages: [{ role: 'system', content: sys }, ...messages],
+          max_tokens: 4096,
+          ...(tools ? { tools, tool_choice: 'auto' } : {})
+        })
+      }, 60000);
+      const data = await res.json();
+      if (data.error) { console.log(`[Groq/${model}] Error:`, data.error.message); continue; }
+      console.log(`[Groq/${model}] OK`);
+      return data.choices?.[0]?.message?.content || null;
+    } catch (e) { console.log(`[Groq/${model}] Error:`, e.message); }
+  }
+  return null;
+}
+
+async function cerebras(messages, system, tools = null) {
+  if (!CEREBRAS_KEY || CEREBRAS_KEY.includes('isi_')) { console.log('[Cerebras] No key'); return null; }
+  const models = ['gpt-oss-120b', 'qwen-3.8-27b'];
+  for (const model of models) {
+    try {
+      const sys = system || getSystem();
+      const res = await fetchWithTimeout('https://api.cerebras.ai/v1/chat/completions', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${CEREBRAS_KEY}` },
+        body: JSON.stringify({
+          model,
+          messages: [{ role: 'system', content: sys }, ...messages],
+          max_tokens: 4096,
+          ...(tools ? { tools, tool_choice: 'auto' } : {})
+        })
+      }, 60000);
+      const data = await res.json();
+      if (data.error) { console.log(`[Cerebras/${model}] Error:`, data.error.message); continue; }
+      console.log(`[Cerebras/${model}] OK`);
+      return data.choices?.[0]?.message?.content || null;
+    } catch (e) { console.log(`[Cerebras/${model}] Error:`, e.message); }
+  }
+  return null;
+}
+
+// Deteksi tipe pertanyaan untuk smart routing
+function klasifikasiPesan(messages) {
+  const last = (messages[messages.length - 1]?.content || '').toLowerCase();
+  const len = last.length;
+
+  // Keyword coding
+  const codingKw = ['kode', 'code', 'coding', 'fungsi', 'function', 'script', 'debug', 'error',
+    'bug', 'compile', 'program', 'python', 'javascript', 'node', 'html', 'css', 'sql',
+    'api', 'endpoint', 'class', 'variable', 'loop', 'array', 'object', 'git', 'bash',
+    'regex', 'algoritma', 'algorithm', 'refactor', 'optimize'];
+
+  // Keyword reasoning / analisis
+  const reasoningKw = ['analisis', 'analyze', 'jelaskan', 'explain', 'bandingkan', 'compare',
+    'kenapa', 'mengapa', 'why', 'bagaimana', 'how', 'strategi', 'strategy', 'trade-off',
+    'kelebihan', 'kekurangan', 'pro', 'cons', 'evaluasi', 'evaluate', 'kesimpulan'];
+
+  // Keyword research
+  const researchKw = ['cari', 'search', 'research', 'berita', 'news', 'terbaru', 'latest',
+    'siapa', 'who', 'kapan', 'when', 'dimana', 'where', 'harga', 'price', 'update'];
+
+  const hasCoding = codingKw.some(k => last.includes(k));
+  const hasReasoning = reasoningKw.some(k => last.includes(k));
+  const hasResearch = researchKw.some(k => last.includes(k));
+
+  if (hasCoding) return 'coding';
+  if (hasReasoning) return 'reasoning';
+  if (hasResearch) return 'research';
+  if (len > 150) return 'reasoning'; // pertanyaan panjang = butuh mikir
+  return 'chat'; // sisanya chat ringan
+}
+
+async function tanya(messages, system, mode = 'auto', tools = null) {
+  // Force mode
+  if (mode === 'groq') return await groq(messages, system, tools) || 'Sistem lagi sibuk, coba lagi.';
+  if (mode === 'cerebras') return await cerebras(messages, system, tools) || 'Sistem lagi sibuk, coba lagi.';
+  if (mode === 'local') return await localModel(messages, system) || 'Sistem lagi sibuk, coba lagi.';
+
+  // Smart routing
+  const tipe = klasifikasiPesan(messages);
+  console.log(`[Router] Tipe: ${tipe}`);
+
+  if (tipe === 'chat') {
+    // Chat ringan → lokal dulu, hemat quota
+    const lokal = await localModel(messages, system);
+    if (lokal && lokal.trim().length > 5) return lokal;
+    const g = await groq(messages, system, tools);
+    if (g) return g;
+    const c = await cerebras(messages, system, tools);
+    if (c) return c;
+  } else {
+    // Coding / reasoning / research → model pinter dulu
+    const g = await groq(messages, system, tools);
+    if (g) return g;
+    const c = await cerebras(messages, system, tools);
+    if (c) return c;
+    const lokal = await localModel(messages, system);
+    if (lokal) return lokal;
+  }
+
+  return 'Sistem lagi sibuk, coba lagi.';
+}
+
+module.exports = { tanya, localModel, groq, cerebras, klasifikasiPesan };

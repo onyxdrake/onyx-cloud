@@ -1,0 +1,172 @@
+// bot/onyx-bot.js — Telegraf version
+require('dotenv').config();
+const { Telegraf } = require('telegraf');
+const fs = require('fs');
+const path = require('path');
+
+const TOKEN = process.env.TELEGRAM_BOT_TOKEN;
+if (!TOKEN || TOKEN === 'TOKEN_LO') {
+  console.error('❌ TELEGRAM_BOT_TOKEN kosong atau masih placeholder');
+  console.error('   Ambil token dari @BotFather → /mybots → Onyx Initium → API Token');
+  process.exit(1);
+}
+
+const bot = new Telegraf(TOKEN);
+
+const USERS_FILE = path.join(__dirname, '..', 'data', 'users.json');
+const BILLING_FILE = path.join(__dirname, '..', 'data', 'billing.json');
+const REFERRAL_FILE = path.join(__dirname, '..', 'data', 'referrals.json');
+
+function loadJSON(file, def = {}) {
+  try { return JSON.parse(fs.readFileSync(file, 'utf8')); }
+  catch { return def; }
+}
+
+function saveJSON(file, data) {
+  fs.writeFileSync(file, JSON.stringify(data, null, 2));
+}
+
+// Filter channel
+bot.use((ctx, next) => {
+  if (ctx.chat?.type === 'channel') return;
+  return next();
+});
+
+// /start
+bot.start((ctx) => {
+  const name = ctx.from.first_name || 'User';
+  const welcome = `🚀 *Selamat datang di Onyx Cloud, ${name}!*
+
+Onyx adalah AI yang *execute*, bukan cuma jawab.
+
+*Fitur:*
+🤖 Chat AI (20 bahasa)
+🎨 Image generation
+🔍 Web search + OSINT
+💻 Coding assistant
+📦 API service
+
+*Command:*
+/status — cek saldo
+/topup — beli premium
+/premium — info paket
+/daily — bonus harian
+/referral — dapet bonus
+/help — bantuan`;
+
+  ctx.replyWithMarkdown(welcome);
+});
+
+// /status
+bot.command('status', (ctx) => {
+  const userId = String(ctx.from.id);
+  const billing = loadJSON(BILLING_FILE);
+  const user = billing[userId] || { balance: 0, totalUsed: 0 };
+
+  const text = `📊 *Status Akun*\n\n` +
+    `👤 User ID: \`${userId}\`\n` +
+    `💰 Saldo: *$${(user.balance || 0).toFixed(2)}*\n` +
+    `📉 Total used: $${(user.totalUsed || 0).toFixed(2)}\n` +
+    `📦 Tier: *${user.tier || 'free'}*`;
+
+  ctx.replyWithMarkdown(text);
+});
+
+// /premium
+bot.command('premium', (ctx) => {
+  const text = `💎 *Paket Premium Onyx*
+
+🆓 *Free* — $0/bulan
+• 20 chat/hari
+• 3 image/hari
+
+⭐ *Basic* — $2.5/bulan
+• 100 chat/hari
+• 20 image/hari
+• 1 API Key
+
+🔥 *Premium* — $7/bulan
+• 500 chat/hari
+• 100 image/hari
+• 5 API Key
+• Priority queue
+
+👑 *Pro* — $25/bulan
+• 2.000 chat/hari
+• 500 image/hari
+• 20 API Key
+• 20 GB storage
+
+Bayar: /topup`;
+
+  ctx.replyWithMarkdown(text);
+});
+
+// /topup
+bot.command('topup', (ctx) => {
+  const url = 'https://compactly-propeller-livestock.ngrok-free.dev/topup.html';
+  ctx.replyWithMarkdown(`💳 *Top-up Onyx*\n\n${url}\n\nMetode: USDC (Solana)`);
+});
+
+// /daily
+bot.command('daily', (ctx) => {
+  const userId = String(ctx.from.id);
+  const billing = loadJSON(BILLING_FILE);
+  if (!billing[userId]) billing[userId] = { balance: 0, lastDaily: 0 };
+
+  const now = Date.now();
+  const lastDaily = billing[userId].lastDaily || 0;
+  const cooldown = 24 * 60 * 60 * 1000;
+
+  if (now - lastDaily < cooldown) {
+    const sisa = cooldown - (now - lastDaily);
+    const jam = Math.floor(sisa / 3600000);
+    const menit = Math.floor((sisa % 3600000) / 60000);
+    return ctx.reply(`⏰ Udah ambil bonus hari ini.\nCoba lagi dalam ${jam}j ${menit}m.`);
+  }
+
+  const bonus = 0.05;
+  billing[userId].balance += bonus;
+  billing[userId].lastDaily = now;
+  saveJSON(BILLING_FILE, billing);
+
+  ctx.replyWithMarkdown(`🎁 *Bonus harian!*\n\n+$${bonus}\nSaldo: *$${billing[userId].balance.toFixed(2)}*`);
+});
+
+// /referral
+bot.command('referral', (ctx) => {
+  const userId = String(ctx.from.id);
+  const referrals = loadJSON(REFERRAL_FILE);
+  if (!referrals[userId]) {
+    referrals[userId] = { code: userId.slice(-6), count: 0, earned: 0 };
+    saveJSON(REFERRAL_FILE, referrals);
+  }
+
+  const r = referrals[userId];
+  const link = `https://t.me/onyxinitium_bot?start=ref_${r.code}`;
+
+  ctx.replyWithMarkdown(`🎁 *Referral Program*\n\n${link}\n\nSetiap teman yang join + top-up, lo dapet *$0.50*\n\nTotal: *${r.count}*\nEarned: *$${r.earned.toFixed(2)}*`);
+});
+
+// /help
+bot.command('help', (ctx) => {
+  const text = `❓ *Bantuan Onyx*\n\n` +
+    `/start — mulai\n/status — cek saldo\n` +
+    `/premium — paket\n/topup — top up\n` +
+    `/daily — bonus harian\n/referral — referral\n/help — bantuan`;
+
+  ctx.replyWithMarkdown(text);
+});
+
+// Error handling
+bot.catch((err, ctx) => {
+  console.error('Bot error:', err);
+});
+
+// Start bot
+bot.launch().then(() => {
+  console.log('🤖 Onyx Bot aktif! (@onyxinitium_bot)');
+});
+
+process.once('SIGINT', () => bot.stop('SIGINT'));
+process.once('SIGTERM', () => bot.stop('SIGTERM'));

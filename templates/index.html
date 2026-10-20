@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>Onyx</title>
+  <link rel="stylesheet" href="/static/style.css" />
+</head>
+<body>
+  <div class="app">
+    <!-- Sidebar -->
+    <aside id="sidebar" class="sidebar">
+      <div class="sidebar-header">
+        <span class="logo">◆ Onyx</span>
+        <button id="btn-close-sidebar" class="icon-btn">✕</button>
+      </div>
+      <button id="btn-new-chat" class="btn new-chat">+ Chat baru</button>
+      <div id="history-list" class="history-list"></div>
+      <div class="sidebar-footer">
+        <button id="btn-settings" class="btn ghost full">⚙️ Pengaturan</button>
+        {% if logged_in %}
+        <div class="user-info">{{ email }}</div>
+        <button id="btn-logout" class="btn ghost full">Logout</button>
+        {% else %}
+        <button id="btn-login" class="btn primary full">Masuk / Daftar</button>
+        {% endif %}
+      </div>
+    </aside>
+
+    <!-- Main -->
+    <div class="main">
+      <header class="topbar">
+        <button id="btn-open-sidebar" class="icon-btn">☰</button>
+        <div class="controls">
+          <select id="provider"><option value="groq">Groq</option><option value="cerebras">Cerebras</option></select>
+          <select id="model"></select>
+        </div>
+        {% if is_premium %}<span class="badge">PREMIUM</span>{% endif %}
+      </header>
+
+      <main id="chat" class="chat">
+        <div class="welcome" id="welcome">
+          <h1>Onyx</h1>
+          <p>Satu AI. Cepat. Lebih longgar. Bantu apa saja yang legal.</p>
+        </div>
+      </main>
+
+      <footer class="input-area">
+        <div class="input-row">
+          <button id="btn-attach" class="icon-btn" title="File">📎</button>
+          <button id="btn-image" class="icon-btn" title="Generate gambar">🖼</button>
+          <input type="file" id="file-input" accept="image/*,.pdf,.txt,.md" hidden />
+          <textarea id="prompt" rows="1" placeholder="Tanya Onyx..." autofocus></textarea>
+          <button id="btn-send" class="icon-btn send">➤</button>
+        </div>
+      </footer>
+    </div>
+  </div>
+
+  <!-- Auth Modal -->
+  <div id="auth-modal" class="modal hidden">
+    <div class="modal-content">
+      <h2 id="auth-title">Masuk / Daftar</h2>
+      <div id="auth-form">
+        <input type="email" id="auth-email" placeholder="Email Gmail" />
+        <input type="password" id="auth-password" placeholder="Password (min 6)" />
+        <div class="auth-btns">
+          <button id="btn-do-login" class="btn">Masuk</button>
+          <button id="btn-do-register" class="btn primary">Daftar</button>
+        </div>
+      </div>
+      <div id="auth-otp" class="hidden">
+        <p class="muted">OTP dikirim ke email. Masukkan 6 digit.</p>
+        <input type="text" id="auth-otp-input" placeholder="123456" maxlength="6" />
+        <button id="btn-verify-otp" class="btn primary full">Verifikasi</button>
+      </div>
+      <p id="auth-msg" class="msg"></p>
+      <button class="btn ghost" id="btn-close-auth">Tutup</button>
+    </div>
+  </div>
+
+  <!-- Settings Modal -->
+  <div id="settings-modal" class="modal hidden">
+    <div class="modal-content wide">
+      <h2>Pengaturan</h2>
+      <section>
+        <h3>Sandingkan akun</h3>
+        <p class="muted">Klik lalu setujui di akun masing-masing (OAuth).</p>
+        <div id="connect-list" class="connect-list">
+          <button class="btn connect" data-service="gmail">Gmail</button>
+          <button class="btn connect" data-service="spotify">Spotify</button>
+          <button class="btn connect" data-service="github">GitHub</button>
+          <button class="btn connect" data-service="notion">Notion</button>
+          <button class="btn connect" data-service="slack">Slack</button>
+        </div>
+      </section>
+      <section>
+        <h3>Tampilan</h3>
+        <label>Background image URL <input type="url" id="bg-url" placeholder="https://..." /></label>
+        <button id="btn-apply-bg" class="btn">Terapkan</button>
+      </section>
+      <button class="btn ghost" id="btn-close-settings">Tutup</button>
+    </div>
+  </div>
+
+  <!-- Image prompt modal -->
+  <div id="image-modal" class="modal hidden">
+    <div class="modal-content">
+      <h2>Generate Gambar</h2>
+      <input type="text" id="image-prompt" placeholder="Deskripsi gambar..." />
+      <button id="btn-gen-image" class="btn primary full">Generate (Pollinations)</button>
+      <div id="image-result"></div>
+      <button class="btn ghost" id="btn-close-image">Tutup</button>
+    </div>
+  </div>
+
+  <script src="/static/app.js"></script>
+</body>
+</html>

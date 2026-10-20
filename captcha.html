@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Verifikasi Lucu — Onyx</title>
+<style>
+  body { background: #0a0a0a; color: #fff; font-family: sans-serif; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; overflow: hidden; }
+  .box { background: #141414; border: 1px solid #222; padding: 24px; border-radius: 16px; text-align: center; max-width: 320px; width: 100%; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
+  h2 { font-size: 18px; margin-bottom: 8px; color: #0f0; }
+  p { font-size: 13px; color: #888; margin-bottom: 24px; }
+  
+  /* Area Drop */
+  .dropzone { background: #1a1a1a; border: 2px dashed #333; border-radius: 12px; height: 120px; display: flex; align-items: center; justify-content: center; font-size: 48px; margin-bottom: 20px; transition: all 0.2s; }
+  .dropzone.active { border-color: #0f0; background: #0a1a0a; transform: scale(1.05); }
+  
+  /* Item Drag */
+  .draggable { display: inline-block; font-size: 40px; cursor: grab; user-select: none; transition: transform 0.2s; }
+  .draggable:active { cursor: grabbing; transform: scale(0.9); }
+  
+  /* Animasi Sukses */
+  @keyframes pop { 0% { transform: scale(0.5); opacity: 0; } 80% { transform: scale(1.2); } 100% { transform: scale(1); opacity: 1; } }
+  .success { animation: pop 0.5s ease-out; }
+  
+  .fail { color: #f44; font-size: 14px; font-weight: bold; display: none; margin-top: 16px; }
+</style>
+</head>
+<body>
+
+<div class="box">
+  <h2 id="title">😼 Verifikasi Kucing</h2>
+  <p id="desc">Geser biskuit ke mangkuk kucing!</p>
+
+  <!-- Emoji Mangkuk -->
+  <div class="dropzone" id="dropzone" ondragover="dragOver(event)" ondragleave="dragLeave(event)" ondrop="drop(event)">
+    🥣
+  </div>
+
+  <!-- Emoji Biskuit -->
+  <div id="source" draggable="true" ondragstart="dragStart(event)" class="draggable">🍪</div>
+
+  <div class="fail" id="fail">❌ Bukan biskuit itu, coba lagi!</div>
+</div>
+
+<script>
+function dragStart(e) {
+  e.dataTransfer.setData('text/plain', 'biskuit');
+}
+
+function dragOver(e) {
+  e.preventDefault();
+  document.getElementById('dropzone').classList.add('active');
+}
+
+function dragLeave(e) {
+  document.getElementById('dropzone').classList.remove('active');
+}
+
+function drop(e) {
+  e.preventDefault();
+  document.getElementById('dropzone').classList.remove('active');
+  
+  const data = e.dataTransfer.getData('text/plain');
+  const title = document.getElementById('title');
+  const desc = document.getElementById('desc');
+  const fail = document.getElementById('fail');
+  const source = document.getElementById('source');
+  const dropzone = document.getElementById('dropzone');
+
+  if (data === 'biskuit') {
+    // Sukses
+    source.style.display = 'none';
+    dropzone.textContent = '🐱';
+    dropzone.classList.add('success');
+    title.textContent = '🎉 Berhasil!';
+    title.style.color = '#0f0';
+    desc.textContent = 'Kucingnya kenyang. Lanjut masuk...';
+    fail.style.display = 'none';
+    
+    // Simulasi selesai, redirect balik ke register/login
+    setTimeout(() => {
+      window.location.href = '/register.html?verified=true';
+    }, 1500);
+  } else {
+    // Gagal
+    fail.style.display = 'block';
+  }
+}
+</script>
+</body>
+</html>

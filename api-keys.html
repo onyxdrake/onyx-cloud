@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>API Keys — Onyx</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: #0a0a0a; color: #eee; font-family: -apple-system, sans-serif; padding: 16px; max-width: 600px; margin: 0 auto; }
+  a.back { color: #0f0; text-decoration: none; font-size: 13px; }
+  h1 { font-size: 20px; margin: 12px 0 4px; background: linear-gradient(90deg, #0f0, #0ff); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+  .sub { color: #888; font-size: 12px; margin-bottom: 16px; }
+  .card { background: #141414; border: 1px solid #1f1f1f; border-radius: 12px; padding: 16px; margin-bottom: 12px; }
+  .card h3 { color: #0f0; font-size: 14px; margin-bottom: 8px; }
+  label { display: block; font-size: 12px; color: #aaa; margin: 10px 0 4px; }
+  input { width: 100%; background: #0a0a0a; border: 1px solid #222; color: #eee; padding: 10px; border-radius: 8px; font-size: 13px; font-family: monospace; }
+  input:focus { border-color: #0f0; outline: none; }
+  button { background: #0f0; color: #000; border: none; padding: 12px 20px; border-radius: 8px; font-weight: 700; cursor: pointer; font-size: 13px; margin-top: 12px; width: 100%; }
+  .key-item { background: #0a1f0a; border: 1px solid #0f0; border-radius: 8px; padding: 12px; margin-top: 10px; font-family: monospace; font-size: 12px; }
+  .key-item .preview { color: #0f0; font-weight: 700; margin-bottom: 6px; }
+  .key-item .domains { color: #888; font-size: 11px; }
+  .key-item button.revoke { background: #ff4444; color: #fff; padding: 6px 12px; font-size: 11px; width: auto; margin-top: 8px; }
+  .new-key { background: #1a2a1a; border: 2px solid #0f0; border-radius: 12px; padding: 16px; margin-bottom: 16px; }
+  .new-key .key-display { font-family: monospace; font-size: 12px; word-break: break-all; background: #0a0a0a; padding: 12px; border-radius: 8px; margin-top: 8px; color: #0f0; }
+</style>
+</head>
+<body>
+
+<a class="back" href="/onyx.html">← Kembali</a>
+<h1>🔑 API Keys</h1>
+<p class="sub">Bikin API key buat integrasi Onyx ke app lo. Key di-lock ke domain lo — gak bisa dipake di tempat lain.</p>
+
+<div id="newKeyBox"></div>
+
+<div class="card">
+  <h3>Generate Key Baru</h3>
+  <label>Domain (boleh lebih dari 1, pisah pake koma)</label>
+  <input id="domains" placeholder="myapp.com, *.myapp.com">
+  <button onclick="generate()">🔑 Generate API Key</button>
+</div>
+
+<div id="keyList"></div>
+
+<script>
+const email = localStorage.getItem('onyx_user_email') || prompt('Email lo:');
+if (email) localStorage.setItem('onyx_user_email', email);
+
+async function generate() {
+  const domains = document.getElementById('domains').value.split(',').map(d => d.trim()).filter(Boolean);
+  try {
+    const r = await fetch('/api/api-keys/generate', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email, domains })
+    });
+    const d = await r.json();
+    if (d.ok) {
+      document.getElementById('newKeyBox').innerHTML = `
+        <div class="new-key">
+          <div style="color:#0f0;font-weight:700;">✅ Key berhasil dibuat!</div>
+          <div style="font-size:11px;color:#888;margin-top:8px;">Simpen key ini — cuma muncul SEKALI.</div>
+          <div class="key-display">${d.key}</div>
+          <div style="font-size:11px;color:#888;margin-top:8px;">Domain: ${domains.join(', ') || '(belum diset — bisa diakses dari mana aja)'}</div>
+        </div>
+      `;
+      loadKeys();
+    } else {
+      alert('❌ ' + d.error);
+    }
+  } catch (e) {
+    alert('❌ ' + e.message);
+  }
+}
+
+async function loadKeys() {
+  try {
+    const r = await fetch('/api/api-keys/list?email=' + encodeURIComponent(email));
+    const d = await r.json();
+    if (!d.ok) return;
+    document.getElementById('keyList').innerHTML = d.keys.map(k => `
+      <div class="key-item">
+        <div class="preview">${k.keyPreview}</div>
+        <div class="domains">🌐 ${k.domains.join(', ') || '(bebas)'}</div>
+        <div class="domains">📊 ${k.usage.requests} requests</div>
+        <div class="domains">📅 ${new Date(k.createdAt).toLocaleDateString('id-ID')}</div>
+        ${k.active ? `<button class="revoke" onclick="revoke('${k.keyPreview}')">🗑️ Revoke</button>` : '<div style="color:#f44;font-size:11px;margin-top:8px;">REVOKED</div>'}
+      </div>
+    `).join('') || '<div style="text-align:center;color:#666;padding:20px;">Belum ada key.</div>';
+  } catch {}
+}
+
+async function revoke(preview) {
+  if (!confirm('Revoke key ini? Aplikasi yang pakai bakal berhenti.')) return;
+  await fetch('/api/api-keys/revoke', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ email, preview })
+  });
+  loadKeys();
+}
+
+loadKeys();
+</script>
+
+</body>
+</html>

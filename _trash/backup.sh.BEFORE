@@ -1,0 +1,26 @@
+#!/data/data/com.termux/files/usr/bin/bash
+# Onyx Cloud — backup otomatis
+
+cd "$(dirname "$0")"
+BACKUP_NAME="onyx-backup-$(date +%Y%m%d-%H%M%S)"
+BACKUP_DIR="backups/$BACKUP_NAME"
+
+mkdir -p "$BACKUP_DIR"
+
+echo "📦 Backup ke $BACKUP_DIR..."
+
+# Copy file penting
+cp -r core api tools js data public "$BACKUP_DIR/" 2>/dev/null
+cp *.js *.sh *.html *.json *.md "$BACKUP_DIR/" 2>/dev/null
+
+# Jangan copy: node_modules, .git, backups, *.BEFORE, *.bak
+# Backup .env juga (tapi tersembunyi)
+cp .env "$BACKUP_DIR/.env.backup" 2>/dev/null
+
+# Hapus file > 7 hari
+find backups/ -maxdepth 1 -type d -name "onyx-backup-*" -mtime +7 -exec rm -rf {} \;
+
+# Ringkasan
+SIZE=$(du -sh "$BACKUP_DIR" | cut -f1)
+echo "✅ Backup selesai: $BACKUP_DIR ($SIZE)"
+echo "📁 Total backup: $(ls backups/ | wc -l)"

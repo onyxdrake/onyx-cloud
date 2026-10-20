@@ -1,0 +1,18 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Premium — Onyx</title>
+<style>body{font-family:-apple-system,sans-serif;background:#0a0a0a;color:#eee;padding:16px;max-width:900px;margin:0 auto}h1{background:linear-gradient(90deg,#0f0,#0ff);-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:6px}.sub{color:#888;font-size:12px;margin-bottom:20px}.pricing{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}@media(max-width:900px){.pricing{grid-template-columns:repeat(2,1fr)}}@media(max-width:600px){.pricing{grid-template-columns:1fr}}.card{background:#0d0d0d;border:1px solid #1a1a1a;border-radius:14px;padding:16px;text-align:center}.card.popular{border-color:#0f0;box-shadow:0 0 20px rgba(0,255,0,0.15)}.card h3{font-size:13px;color:#aaa;margin-bottom:6px}.card .price{font-size:22px;font-weight:800;color:#0f0;margin-bottom:14px}.card ul{list-style:none;text-align:left;margin-bottom:16px}.card ul li{font-size:11px;color:#aaa;padding:5px 0;border-bottom:1px solid #141414}.card ul li::before{content:'✓';color:#0f0;margin-right:6px}.card button{width:100%;padding:10px;border-radius:8px;font-weight:700;font-size:12px;cursor:pointer;border:none}.btn-primary{background:#0f0;color:#000}.btn-secondary{background:#1a1a1a;color:#0f0;border:1px solid #0f0}.back{color:#0f0;text-decoration:none;font-size:13px}</style></head>
+<body><a class="back" href="/onyx.html">← Back</a>
+<h1>💎 Upgrade to Premium</h1>
+<p class="sub">Get higher limits, smarter models, and exclusive features.</p>
+<div class="pricing">
+<div class="card"><h3>Free</h3><div class="price">$0</div><ul><li>20 chat/day</li><li>3 coding/day</li><li>3 images/day</li><li>Onyx AI — Basic</li></ul><button class="btn-secondary" disabled>Current</button></div>
+<div class="card"><h3>Basic</h3><div class="price">$1.5</div><ul><li>50 chat/day</li><li>10 coding/day</li><li>10 images/day</li><li>Onyx AI — Fast</li></ul><button class="btn-secondary" onclick="pilih('basic')">Choose</button></div>
+<div class="card popular"><h3>Premium</h3><div class="price">$3.5</div><ul><li>100 chat/day</li><li>30 coding/day</li><li>30 images/day</li><li>Onyx AI — Pro</li></ul><button class="btn-primary" onclick="pilih('premium')">Choose</button></div>
+<div class="card"><h3>Pro</h3><div class="price">$14</div><ul><li>200 chat/day</li><li>50 coding/day</li><li>50 images/day</li><li>Onyx AI — Pro+</li><li>🐍 Python</li><li>💾 5 GB</li></ul><button class="btn-secondary" onclick="pilih('pro')">Choose</button></div>
+</div>
+<script>
+function pilih(tier) {
+  const userId = localStorage.getItem('onyx_userId');
+  if (!userId) { alert('Please login first!'); window.location.href = '/login.html'; return; }
+  alert('Selected: ' + tier + '\n\nPayment via USDC (Solana). Contact: onyxdrake.ai@gmail.com');
+}
+</script></body></html>

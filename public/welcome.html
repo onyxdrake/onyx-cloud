@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Welcome to Onyx Cloud</title>
+<style>
+  body { background: #0a0a0a; color: #fff; font-family: -apple-system, sans-serif; display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh; margin: 0; text-align: center; }
+  h1 { font-size: 28px; color: #0f0; margin-bottom: 10px; }
+  p { color: #888; font-size: 14px; margin-bottom: 30px; max-width: 300px; }
+  .btn { background: #0f0; color: #000; padding: 14px 32px; border-radius: 10px; font-weight: bold; text-decoration: none; font-size: 16px; transition: 0.2s; }
+  .btn:hover { transform: scale(1.05); }
+  .status { background: #141414; border: 1px solid #222; padding: 8px 16px; border-radius: 20px; font-size: 12px; color: #0f0; margin-bottom: 20px; display: inline-flex; align-items: center; gap: 8px; }
+  .dot { width: 8px; height: 8px; background: #0f0; border-radius: 50%; animation: pulse 2s infinite; }
+  @keyframes pulse { 0% { box-shadow: 0 0 0 0 rgba(0,255,0,0.7); } 70% { box-shadow: 0 0 0 10px rgba(0,255,0,0); } 100% { box-shadow: 0 0 0 0 rgba(0,255,0,0); } }
+</style>
+</head>
+<body>
+  <div class="status"><div class="dot"></div> Server Online</div>
+  <h1>Welcome to Onyx Cloud</h1>
+  <p>The AI that doesn't just answer, it executes. Ready to explore?</p>
+  <a href="/onyx.html" class="btn">Start Chatting 🚀</a>
+</body>
+</html>

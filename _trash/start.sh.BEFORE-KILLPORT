@@ -1,0 +1,89 @@
+#!/data/data/com.termux/files/usr/bin/bash
+# Onyx Cloud — start.sh v3
+
+cd "$(dirname "$0")"
+TMPDIR=/data/data/com.termux/files/usr/tmp
+
+echo "🛑 Matiin proses lama..."
+pkill -f "llama-server" 2>/dev/null || true
+pkill -f "node.*server.js" 2>/dev/null || true
+pkill -f "node.*global-chat" 2>/dev/null || true
+pkill -f "node.*onyx-server" 2>/dev/null || true
+pkill -f "ngrok" 2>/dev/null || true
+sleep 3
+
+# === 1. MODEL LOKAL ===
+LLAMA_PID=""
+if [ -f "$HOME/llama.cpp/build/bin/llama-server" ] && [ -f "$HOME/models/qwen-unfettered.gguf" ]; then
+  echo "🧠 Jalanin model lokal..."
+  "$HOME/llama.cpp/build/bin/llama-server" \
+    -m "$HOME/models/qwen-unfettered.gguf" \
+    --host 127.0.0.1 \
+    --port 8080 \
+    -c 2048 \
+    --threads 4 \
+    > "$TMPDIR/onyx-llama.log" 2>&1 &
+  LLAMA_PID=$!
+  echo "⏳ Tunggu model ready..."
+  sleep 8
+
+  if curl -s -m 3 http://127.0.0.1:8080/v1/models > /dev/null 2>&1; then
+    echo "✅ Model lokal jalan (PID: $LLAMA_PID)"
+  else
+    echo "⚠️  Model lokal gak respon. Cek $TMPDIR/onyx-llama.log"
+    LLAMA_PID=""
+  fi
+else
+  echo "⚠️  Model atau binary gak ada. Skip."
+fi
+
+# === 2. SERVER ONYX ===
+echo "🚀 Jalanin server Onyx..."
+node server.js > "$TMPDIR/onyx-server.log" 2>&1 &
+SERVER_PID=$!
+
+echo "⏳ Tunggu server ready..."
+sleep 5
+
+if ! curl -s -o /dev/null -w "%{http_code}" http://localhost:3000 | grep -q "200\|301\|302\|404"; then
+  echo "❌ Server gagal start. Log:"
+  cat "$TMPDIR/onyx-server.log"
+  exit 1
+fi
+echo "✅ Server jalan di http://localhost:3000"
+
+# === 3. NGROK ===
+echo "🚀 Jalanin ngrok..."
+ngrok http 3000 > "$TMPDIR/onyx-ngrok.log" 2>&1 &
+NGROK_PID=$!
+sleep 4
+
+echo ""
+echo "════════════════════════════════════════"
+echo "  ONYX CLOUD — RUNNING"
+echo "════════════════════════════════════════"
+echo ""
+
+NGROK_URL=$(curl -s http://127.0.0.1:4040/api/tunnels 2>/dev/null | grep -o '"public_url":"https://[^"]*"' | head -1 | cut -d'"' -f4)
+if [ -n "$NGROK_URL" ]; then
+  echo "  🌐 Public URL: $NGROK_URL"
+fi
+echo "  🖥️  Local:      http://localhost:3000"
+if [ -n "$LLAMA_PID" ]; then
+  echo "  🧠 Model:      ✅ online"
+else
+  echo "  🧠 Model:      ❌ offline"
+fi
+echo ""
+echo "  Server PID: $SERVER_PID"
+echo "  Ngrok PID:  $NGROK_PID"
+[ -n "$LLAMA_PID" ] && echo "  Llama PID:  $LLAMA_PID"
+echo ""
+echo "  Tekan Ctrl+C buat stop semua."
+echo "════════════════════════════════════════"
+echo ""
+
+trap "echo ''; echo '🛑 Stopping...'; kill $SERVER_PID $NGROK_PID $LLAMA_PID 2>/dev/null; exit 0" INT
+
+tail -f "$TMPDIR/onyx-server.log" &
+wait

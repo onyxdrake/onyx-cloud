@@ -1,0 +1,132 @@
+const express = require('express');
+require('./core/self-heal').init();
+
+// Start Solana payment polling
+require('./core/solana-payment').startPolling();
+const path = require('path');
+require('dotenv').config();
+
+const apiRouter = require('./api');
+const { initDb } = require('./core/memory');
+const { updateStatus } = require('./core/github');
+const { startTunnel, startWebSocket, getUrl, stopTunnel } = require('./core/cloudflare');
+
+const app = express();
+app.set('trust proxy', 1);
+app.use(express.json({ limit: '10mb' }));
+app.use(require('./core/api-key-middleware'));
+
+// ═══════════════════════════════════════════════
+// SECURITY HEADERS
+// ═══════════════════════════════════════════════
+app.disable('x-powered-by');
+
+// ═══════════════════════════════════════════════
+// NGROK SKIP WARNING
+// ═══════════════════════════════════════════════
+// Auto-set header biar ngrok gak nampilin warning page
+// (khusus redirect callback OAuth)
+app.use((req, res, next) => {
+  // Kalau request ke callback OAuth, inject header ngrok
+  if (req.path.startsWith('/api/oauth/')) {
+    res.setHeader('ngrok-skip-browser-warning', 'true');
+  }
+  next();
+});
+
+app.use((req, res, next) => {
+  // HSTS — paksa HTTPS 1 tahun
+  res.setHeader('Strict-Transport-Security', 'max-age=31536000; includeSubDomains');
+
+  // CSP — cegah XSS injection
+  res.setHeader('Content-Security-Policy',
+    "default-src 'self'; " +
+    "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://cdn.jsdelivr.net; " +
+    "style-src 'self' 'unsafe-inline'; " +
+    "img-src 'self' data: https:; " +
+    "connect-src 'self' wss: https:; " +
+    "font-src 'self' data:; " +
+    "frame-ancestors 'none'; " +
+    "base-uri 'self'; " +
+    "form-action 'self'"
+  );
+
+  // Cegah clickjacking
+  res.setHeader('X-Frame-Options', 'DENY');
+
+  // Cegah MIME sniffing
+  res.setHeader('X-Content-Type-Options', 'nosniff');
+
+  // Referrer policy
+  res.setHeader('Referrer-Policy', 'strict-origin-when-cross-origin');
+
+  // Permissions policy — matiin fitur yang gak dipake
+  res.setHeader('Permissions-Policy',
+    'camera=(), microphone=(), geolocation=(), payment=(), usb=()'
+  );
+
+  // CORS — izinin hanya domain lo
+  res.setHeader('X-XSS-Protection', '1; mode=block');
+
+  next();
+});
+
+app.use(express.static('public'));
+app.use('/api', apiRouter);
+
+app.get('/*splat', (req, res) => {
+  res.sendFile(path.join(__dirname, 'public', 'index.html'));
+});
+
+initDb().then(async () => {
+  app.listen(3000, async () => {
+    console.log('✅ Onyx di http://localhost:3000');
+
+    // 1. Jalanin Cloudflare Tunnel
+    let cloudflareUrl = null;
+    try {
+      cloudflareUrl = await startTunnel(3000);
+      startWebSocket(8082);
+    } catch (e) {
+      console.log('⚠️  Cloudflare gagal:', e.message);
+      console.log('⚠️  Pake URL lokal aja');
+    }
+
+    // 2. Update GitHub pake URL Cloudflare
+    if (process.env.GITHUB_TOKEN && process.env.GITHUB_REPO) {
+      console.log('🌐 Update GitHub status ON...');
+      const r = await updateStatus('on', {
+        url: 'http://localhost:3000',
+        cloudflareUrl: cloudflareUrl
+      });
+      if (r && r.ok) {
+        console.log('✅ GitHub updated:', r.url || 'success');
+      } else {
+        console.log('❌ GitHub gagal:', r ? r.error : 'unknown');
+      }
+    } else {
+      console.log('⚠️  GITHUB_TOKEN atau GITHUB_REPO kosong. Skip update.');
+    }
+  });
+}).catch(e => {
+  console.error('❌ Init DB gagal:', e.message);
+  process.exit(1);
+});
+
+// Pas server mati
+process.on('SIGINT', async () => {
+  console.log('\n🛑 Server mati...');
+  if (process.env.GITHUB_TOKEN && process.env.GITHUB_REPO) {
+    console.log('🌐 Update GitHub status OFF...');
+    await updateStatus('off');
+    console.log('✅ GitHub di-update');
+  }
+  stopTunnel();
+  process.exit(0);
+});
+
+process.on('SIGTERM', async () => {
+  if (process.env.GITHUB_TOKEN && process.env.GITHUB_REPO) await updateStatus('off');
+  stopTunnel();
+  process.exit(0);
+});

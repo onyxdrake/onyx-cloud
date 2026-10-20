@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+  <meta name="theme-color" content="#0a0a0a">
+  <title>Background — Onyx</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+    body { font-family: -apple-system, sans-serif; background: #0a0a0a; color: #eee; padding: 16px; padding-bottom: 100px; max-width: 480px; margin: 0 auto; }
+    .back { color: #0f0; text-decoration: none; font-size: 13px; }
+    h1 { font-size: 20px; margin: 12px 0 4px; background: linear-gradient(90deg, #0f0, #0ff); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+    .sub { color: #666; font-size: 12px; margin-bottom: 16px; }
+    .preview { width: 100%; height: 160px; background: #141414; border: 1px solid #222; border-radius: 12px; margin-bottom: 16px; display: flex; align-items: center; justify-content: center; background-size: cover; background-position: center; color: #444; font-size: 13px; overflow: hidden; }
+    label { display: block; font-size: 12px; color: #aaa; margin: 14px 0 6px; }
+    input[type="file"] { width: 100%; background: #141414; border: 1px solid #222; color: #eee; padding: 10px; border-radius: 10px; font-size: 12px; }
+    textarea { width: 100%; background: #141414; border: 1px solid #222; color: #eee; padding: 10px; border-radius: 10px; font-size: 13px; outline: none; font-family: inherit; resize: none; }
+    textarea:focus { border-color: #0f0; }
+    button { width: 100%; background: #0f0; color: #000; border: none; padding: 12px; border-radius: 10px; font-weight: 700; font-size: 13px; cursor: pointer; margin-top: 10px; }
+    button.secondary { background: #1a1a1a; color: #0f0; border: 1px solid #0f0; }
+    .theme-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; margin-top: 6px; }
+    .theme-btn { background: #141414; border: 1px solid #222; color: #0f0; padding: 8px 4px; border-radius: 8px; font-size: 11px; cursor: pointer; }
+    .theme-btn:active { background: #1f1f1f; }
+    .status { font-size: 12px; color: #888; margin-top: 8px; text-align: center; padding: 8px; background: #141414; border-radius: 8px; }
+    .status.ok { color: #0f0; }
+    .status.err { color: #f44; }
+  </style>
+</head>
+<body>
+  <a class="back" href="/onyx.html">← Balik</a>
+  <h1>🎨 Background Custom</h1>
+  <p class="sub">Upload gambar sendiri (paling gampang) atau generate pake AI.</p>
+
+  <div class="preview" id="preview">Preview</div>
+  <div class="status" id="status">Siap</div>
+
+  <label>📁 Upload gambar (RECOMMENDED)</label>
+  <input type="file" id="file-input" accept="image/*" onchange="uploadBg(this)">
+
+  <label>🎨 Generate pake AI (kalo jalan)</label>
+  <textarea id="prompt" rows="2" placeholder="Contoh: anime sunset, neon, dark"></textarea>
+
+  <label>Tema cepat</label>
+  <div class="theme-grid">
+    <button class="theme-btn" onclick="setPrompt('anime sunset landscape, vibrant')">🌅 Anime</button>
+    <button class="theme-btn" onclick="setPrompt('cyberpunk city night, neon')">🌃 Cyber</button>
+    <button class="theme-btn" onclick="setPrompt('fantasy forest, magical')">🌲 Fantasy</button>
+    <button class="theme-btn" onclick="setPrompt('minimalist abstract, green, dark')">🎨 Abstrak</button>
+    <button class="theme-btn" onclick="setPrompt('space galaxy, stars')">🌌 Space</button>
+    <button class="theme-btn" onclick="setPrompt('japanese sakura, soft')">🌸 Sakura</button>
+  </div>
+
+  <button onclick="generateBg()">✨ Generate AI</button>
+  <button class="secondary" onclick="resetBg()">🔄 Reset Default</button>
+
+  <script>
+    function setPrompt(p) { document.getElementById('prompt').value = p; }
+    function setStatus(t, cls) {
+      const s = document.getElementById('status');
+      s.textContent = t;
+      s.className = 'status ' + (cls || '');
+    }
+
+    function uploadBg(inp) {
+      const file = inp.files[0];
+      if (!file) return;
+      if (file.size > 5 * 1024 * 1024) {
+        setStatus('❌ Gambar maksimal 5 MB', 'err');
+        return;
+      }
+      const reader = new FileReader();
+      reader.onload = e => {
+        localStorage.setItem('onyx_bg', e.target.result);
+        const p = document.getElementById('preview');
+        p.style.backgroundImage = `url(${e.target.result})`;
+        p.textContent = '';
+        setStatus('✅ Background di-upload!', 'ok');
+      };
+      reader.readAsDataURL(file);
+    }
+
+    
+    function generateBg() {
+      const prompt = document.getElementById('prompt').value.trim();
+      if (!prompt) return setStatus('❌ Isi prompt dulu', 'err');
+
+      const p = document.getElementById('preview');
+      p.textContent = '⏳ Loading...';
+      p.style.backgroundImage = 'none';
+      setStatus('Menghubungi Pollinations...');
+
+      const seed = Date.now();
+      // Coba beberapa endpoint
+      const endpoints = [
+        `https://image.pollinations.ai/prompt/${encodeURIComponent(prompt + ', wallpaper, no text')}?width=1080&height=1920&nologo=true&seed=${seed}`,
+        `https://pollinations.ai/p/${encodeURIComponent(prompt + ', wallpaper')}?width=1080&height=1920&nologo=true`,
+      ];
+
+      let idx = 0;
+      function cobaEndpoint() {
+        if (idx >= endpoints.length) {
+          setStatus('❌ Semua endpoint gagal. Upload manual aja.', 'err');
+          p.textContent = 'Gagal';
+          return;
+        }
+        const url = endpoints[idx];
+        setStatus(`Coba endpoint ${idx + 1}/${endpoints.length}...`);
+
+        const img = new Image();
+        const timeout = setTimeout(() => {
+          idx++;
+          cobaEndpoint();
+        }, 45000);
+
+        img.onload = () => {
+          clearTimeout(timeout);
+          try {
+            const canvas = document.createElement('canvas');
+            canvas.width = img.naturalWidth;
+            canvas.height = img.naturalHeight;
+            const ctx = canvas.getContext('2d');
+            ctx.drawImage(img, 0, 0);
+            const dataUrl = canvas.toDataURL('image/jpeg', 0.8);
+            localStorage.setItem('onyx_bg', dataUrl);
+            p.style.backgroundImage = `url(${dataUrl})`;
+            p.textContent = '';
+            setStatus('✅ Berhasil!', 'ok');
+          } catch (e) {
+            localStorage.setItem('onyx_bg_url', url);
+            p.style.backgroundImage = `url(${url})`;
+            p.textContent = '';
+            setStatus('✅ Berhasil (URL mode)', 'ok');
+          }
+        };
+
+        img.onerror = () => {
+          clearTimeout(timeout);
+          idx++;
+          cobaEndpoint();
+        };
+
+        img.src = url;
+      }
+      cobaEndpoint();
+    }
+
+
+    function resetBg() {
+      localStorage.removeItem('onyx_bg');
+      localStorage.removeItem('onyx_bg_url');
+      const p = document.getElementById('preview');
+      p.style.backgroundImage = 'none';
+      p.textContent = 'Preview';
+      setStatus('🔄 Di-reset');
+    }
+
+    const existing = localStorage.getItem('onyx_bg') || localStorage.getItem('onyx_bg_url');
+    if (existing) {
+      const p = document.getElementById('preview');
+      p.style.backgroundImage = `url(${existing})`;
+      p.textContent = '';
+      setStatus('Background aktif');
+    }
+  </script>
+
+<script>
+  // Auto-redirect ke chat setelah 5 detik gak ada aktivitas
+  let timer = setTimeout(() => {
+    window.location.href = '/onyx.html';
+  }, 5000);
+
+  // Reset timer kalo user gerak
+  ['mousemove', 'keydown', 'touchstart', 'click'].forEach(evt => {
+    document.addEventListener(evt, () => {
+      clearTimeout(timer);
+      timer = setTimeout(() => {
+        window.location.href = '/onyx.html';
+      }, 5000);
+    });
+  });
+</script>
+</body>
+</html>

@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Safety Check — Onyx</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: -apple-system, sans-serif; background: #0a0a0a; color: #eee; padding: 20px; max-width: 480px; margin: 0 auto; min-height: 100vh; display: flex; flex-direction: column; justify-content: center; }
+  h1 { font-size: 22px; color: #0f0; margin-bottom: 8px; }
+  .sub { color: #888; font-size: 13px; margin-bottom: 24px; }
+  .card { background: #141414; border: 1px solid #1f1f1f; border-radius: 12px; padding: 16px; margin-bottom: 12px; }
+  .card h3 { font-size: 14px; color: #0f0; margin-bottom: 8px; }
+  .card p { font-size: 12px; color: #aaa; line-height: 1.6; margin-bottom: 6px; }
+  .card code { background: #0a0a0a; padding: 2px 6px; border-radius: 4px; color: #0f0; font-size: 11px; word-break: break-all; }
+  .vt-link { display: inline-block; background: #1a2a3a; color: #4af; padding: 8px 14px; border-radius: 8px; text-decoration: none; font-size: 12px; margin-top: 8px; }
+  .btn-row { display: flex; gap: 10px; margin-top: 20px; }
+  button { flex: 1; padding: 14px; border-radius: 10px; border: none; font-size: 14px; font-weight: 700; cursor: pointer; }
+  .btn-continue { background: #0f0; color: #000; }
+  .btn-exit { background: #1a1a1a; color: #888; border: 1px solid #333; }
+  .btn-continue:disabled { background: #333; color: #666; cursor: not-allowed; }
+  .small { font-size: 11px; color: #555; margin-top: 16px; text-align: center; }
+</style>
+</head>
+<body>
+
+<h1>🛡️ Safety Check</h1>
+<p class="sub">Sebelum lanjut, lu bisa cek dulu apakah domain ini aman.</p>
+
+<div class="card">
+  <h3>Domain yang bakal lu akses</h3>
+  <p><code id="domain">compactly-propeller-livestock.ngrok-free.dev</code></p>
+</div>
+
+<div class="card">
+  <h3>Cek Keamanan (opsional)</h3>
+  <p>Kalau mau, cek dulu di VirusTotal. Kalau hasilnya bersih, lanjut. Kalau ada warning, tinggal keluar.</p>
+  <a class="vt-link" id="vtLink" href="#" target="_blank" rel="noopener">🔍 Cek di VirusTotal</a>
+</div>
+
+<div class="card">
+  <h3>Kalau gak mau cek</h3>
+  <p>Gak masalah. Tinggal klik Lanjut. Ini cuma opsional, bukan wajib.</p>
+</div>
+
+<div class="btn-row">
+  <button class="btn-exit" onclick="keluar()">Keluar</button>
+  <button class="btn-continue" id="btnLanjut" onclick="lanjut()">Lanjut</button>
+</div>
+
+<p class="small">Pilihan ini disimpan di browser lu. Gak muncul lagi setelah ini.</p>
+
+<script>
+// Ambil domain dari URL
+const host = window.location.hostname;
+
+// Update domain di card
+document.getElementById('domain').textContent = host;
+
+// Update VirusTotal link
+const vtUrl = 'https://www.virustotal.com/gui/domain/' + host;
+document.getElementById('vtLink').href = vtUrl;
+
+// Fungsi lanjut — set flag, redirect ke home
+function lanjut() {
+  localStorage.setItem('onyx_safety_ok', Date.now().toString());
+  window.location.href = '/index.html';
+}
+
+// Fungsi keluar — redirect ke Google
+function keluar() {
+  window.location.href = 'https://www.google.com';
+}
+
+// Kalau user udah pernah lanjut (< 30 hari), auto-skip
+const lastOk = localStorage.getItem('onyx_safety_ok');
+if (lastOk) {
+  const umur = Date.now() - parseInt(lastOk);
+  const TIGA_PULUH_HARI = 30 * 24 * 60 * 60 * 1000;
+  if (umur < TIGA_PULUH_HARI) {
+    window.location.href = '/index.html';
+  }
+}
+</script>
+
+</body>
+</html>

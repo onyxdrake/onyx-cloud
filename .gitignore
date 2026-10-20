@@ -1,0 +1,17 @@
+# Dependencies
+node_modules/
+
+# Secrets
+.env
+.env.*
+*.pem
+
+# Database & User Data
+data/
+pardus.db
+backups/
+
+# Logs & Temp
+*.log
+*.tar.gz
+.DS_Store
