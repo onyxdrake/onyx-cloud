@@ -118,7 +118,24 @@ echo ""
 echo "  Tekan Ctrl+C buat stop."
 echo "════════════════════════════════════════"
 
-trap "echo ''; echo '🛑 Stopping...'; kill $SERVER_PID $NGROK_PID $LLAMA_PID $BOT_PID 2>/dev/null; rm -f $LOCK_FILE; exit 0" INT
 
+# Auto-deploy ke Netlify
+if [ -f "netlify-deploy.js" ]; then
+  echo "🌐 Deploy ke Netlify..."
+  node netlify-deploy.js
+fi
+
+# Tampilkan log
+echo "📡 Memantau server..."
 tail -f "$TMPDIR/onyx-server.log" &
 wait
+
+trap "echo ''; echo '🛑 Stopping...'; kill $SERVER_PID $NGROK_PID $LLAMA_PID $BOT_PID 2>/dev/null; rm -f $LOCK_FILE; exit 0" INT
+
+
+# Auto-deploy ke Netlify
+echo "🌐 Deploy ke Netlify..."
+node netlify-deploy.js
+
+# Tampilkan log
+echo "📡 Memantau server..."
