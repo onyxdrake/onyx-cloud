@@ -41,7 +41,7 @@ function ekstrakPrompt(pesan) {
   return p.trim() || pesan;
 }
 
-async function agentLoop(pesan, mode = 'chat', bahasa = 'EN', personality = 'formal', reasoning = 'medium', history = []) {
+async function agentLoop(pesan, mode = 'chat', bahasa = 'EN', personality = 'formal', reasoning = 'medium', history = [], customSystem = null) {
   // Deteksi gambar — comment dulu biar gak salah trigger
   // TODO: aktifin lagi kalau udah ada tool image proper
   if (false && deteksiGambar(pesan)) {
@@ -57,7 +57,8 @@ async function agentLoop(pesan, mode = 'chat', bahasa = 'EN', personality = 'for
   // System prompt sesuai bahasa + personality + reasoning
   const bahasaDariPesan = deteksiBahasaPesan(pesan);
   const bahasaFinal = bahasaDariPesan || bahasa || 'EN';
-  const system = getSystemPrompt(bahasaFinal, personality, reasoning) + getToolList();
+  const baseSystem = customSystem || getSystemPrompt(bahasaFinal, personality, reasoning);
+  const system = baseSystem + '\n\n' + getToolList();
 
   // History dari memori + pesan baru
   let chatHistory = [...(history || [])];

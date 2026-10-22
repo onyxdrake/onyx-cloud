@@ -3,173 +3,270 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Onyx AI</title>
+<title>Onyx Secure — AI Dashboard</title>
 <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
   :root {
-    --bg: #ffffff;
-    --sidebar: #f9f9f9;
-    --border: #e5e5e5;
-    --text: #111111;
-    --text-muted: #888888;
-    --accent: #000000;
-    --hover: #efefef;
+    --bg: #080A0C;
+    --sidebar: #0D1012;
+    --panel: #121619;
+    --border: #242B2F;
+    --accent: #00F58A;
+    --text: #E8F0EC;
+    --text-muted: #84918B;
+    --danger: #FF5D68;
   }
   * { box-sizing: border-box; margin: 0; padding: 0; }
-  body {
-    background: var(--bg);
-    color: var(--text);
-    font-family: 'Inter', sans-serif;
-    height: 100vh; display: flex; overflow: hidden;
-    font-size: 15px;
-  }
+  body { background: var(--bg); color: var(--text); font-family: 'Inter', sans-serif; height: 100vh; display: flex; overflow: hidden; font-size: 14px; }
 
   /* Sidebar */
-  .sidebar {
-    width: 260px; background: var(--sidebar);
-    border-right: 1px solid var(--border);
-    display: flex; flex-direction: column; transition: 0.3s;
-  }
-  .sidebar-header { padding: 16px; }
-  .btn-new {
-    width: 100%; padding: 12px; background: #fff;
-    border: 1px solid var(--border); color: var(--text);
-    border-radius: 12px; cursor: pointer; font-weight: 500;
-    transition: background 0.2s; text-align: left;
-  }
-  .btn-new:hover { background: var(--hover); }
-  .chat-list { flex: 1; overflow-y: auto; padding: 8px; }
-  .chat-item { padding: 10px; border-radius: 8px; font-size: 13px; color: var(--text-muted); cursor: pointer; }
-  .chat-item:hover { background: var(--hover); color: var(--text); }
-  .sidebar-footer { padding: 16px; border-top: 1px solid var(--border); font-size: 12px; }
-  .sidebar-footer a { color: var(--text-muted); text-decoration: none; }
+  .sidebar { width: 260px; background: var(--sidebar); border-right: 1px solid var(--border); display: flex; flex-direction: column; transition: 0.3s; }
+  .sidebar-header { padding: 20px; border-bottom: 1px solid var(--border); display: flex; align-items: center; gap: 10px; }
+  .logo-icon { width: 28px; height: 28px; background: var(--accent); border-radius: 6px; display: flex; align-items: center; justify-content: center; color: #000; font-weight: bold; }
+  .logo-text { font-size: 16px; font-weight: 700; color: var(--text); letter-spacing: 1px; }
+  .nav-section { padding: 20px 10px; }
+  .nav-title { font-size: 10px; text-transform: uppercase; color: var(--text-muted); margin-bottom: 10px; padding-left: 10px; letter-spacing: 1px; font-weight: 600; }
+  .nav-item { display: flex; align-items: center; gap: 12px; padding: 10px; border-radius: 8px; color: var(--text-muted); cursor: pointer; font-size: 13px; font-weight: 500; transition: 0.2s; margin-bottom: 2px; }
+  .nav-item:hover { background: var(--panel); color: var(--text); }
+  .nav-item.active { background: rgba(0, 245, 138, 0.1); color: var(--accent); }
+  .nav-item svg { width: 18px; height: 18px; }
 
-  /* Main Chat */
+  /* Karakter Section */
+  .char-section { padding: 10px; border-top: 1px solid var(--border); }
+  .char-grid { display: flex; gap: 10px; overflow-x: auto; padding-bottom: 10px; }
+  .char-card { width: 60px; height: 80px; background: var(--panel); border: 1px solid var(--border); border-radius: 8px; display: flex; flex-direction: column; align-items: center; justify-content: center; cursor: pointer; flex-shrink: 0; transition: 0.2s; }
+  .char-card.active { border-color: var(--accent); background: rgba(0, 245, 138, 0.05); }
+  .char-card img { width: 40px; height: 40px; border-radius: 50%; object-fit: cover; margin-bottom: 4px; border: 1px solid var(--border); }
+  .char-card span { font-size: 10px; color: var(--text-muted); }
+
+  .sidebar-footer { margin-top: auto; padding: 20px; border-top: 1px solid var(--border); }
+  .system-status { display: flex; align-items: center; gap: 8px; font-size: 11px; color: var(--accent); }
+  .dot { width: 6px; height: 6px; border-radius: 50%; background: var(--accent); box-shadow: 0 0 5px var(--accent); }
+
+  /* Main Area */
   .main { flex: 1; display: flex; flex-direction: column; position: relative; }
-  .top-bar {
-    padding: 16px 24px; display: flex; justify-content: space-between; align-items: center;
-    border-bottom: 1px solid var(--border);
-  }
-  .top-bar h2 { font-size: 16px; font-weight: 600; }
-  .status-badge { font-size: 12px; color: #10a37f; background: #e6f7f2; padding: 4px 12px; border-radius: 20px; font-weight: 500; }
+  .top-bar { height: 64px; border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; padding: 0 24px; background: rgba(8, 10, 12, 0.8); backdrop-filter: blur(10px); z-index: 10; }
+  .page-title { font-size: 15px; font-weight: 600; color: var(--text); }
+  .top-actions { display: flex; gap: 10px; }
+  .btn-icon { width: 32px; height: 32px; border-radius: 8px; border: 1px solid var(--border); background: transparent; color: var(--text-muted); cursor: pointer; display: flex; align-items: center; justify-content: center; }
+  .btn-icon:hover { color: var(--text); background: var(--panel); }
 
   /* Chat Area */
-  .chat-container { flex: 1; overflow-y: auto; padding: 24px; display: flex; flex-direction: column; gap: 24px; }
-  .message { max-width: 800px; width: 100%; margin: 0 auto; display: flex; gap: 16px; }
+  .chat-container { flex: 1; overflow-y: auto; padding: 30px; display: flex; flex-direction: column; gap: 24px; }
+  .message { max-width: 768px; width: 100%; margin: 0 auto; display: flex; gap: 16px; }
   .message.user { flex-direction: row-reverse; }
   
-  .avatar { width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: bold; }
-  .avatar.ai-avatar { background: #111; color: #fff; }
-  .avatar.user-avatar { background: #ddd; color: #333; }
+  .avatar { width: 36px; height: 36px; border-radius: 8px; background: var(--panel); border: 1px solid var(--border); flex-shrink: 0; overflow: hidden; }
+  .avatar img { width: 100%; height: 100%; object-fit: cover; }
   
-  .content { font-size: 15px; line-height: 1.6; flex: 1; color: var(--text); padding-top: 6px; }
-  .message.user .content { background: #f4f4f4; padding: 12px 16px; border-radius: 16px; }
+  .content-wrapper { display: flex; flex-direction: column; gap: 4px; max-width: 85%; }
+  .message.user .content-wrapper { align-items: flex-end; }
+  .sender-name { font-size: 11px; color: var(--text-muted); }
   
-  /* Markdown */
-  .content p { margin-bottom: 12px; }
-  .content strong { font-weight: 600; }
-  .content code { background: #f0f0f0; color: #d63384; padding: 2px 4px; border-radius: 4px; font-family: monospace; }
-  .content pre { background: #111; color: #fff; padding: 16px; border-radius: 8px; overflow-x: auto; margin: 12px 0; }
+  .content { background: var(--panel); border: 1px solid var(--border); padding: 16px; border-radius: 12px; font-size: 14px; line-height: 1.6; color: var(--text); }
+  .message.user .content { background: #1A1F2B; border-color: #2A3140; }
+  
+  .content p { margin-bottom: 10px; }
+  .content p:last-child { margin-bottom: 0; }
+  .content code { background: #000; color: var(--accent); padding: 2px 6px; border-radius: 4px; font-family: monospace; }
+  .content pre { background: #000; padding: 16px; border-radius: 8px; overflow-x: auto; margin: 10px 0; border: 1px solid #333; }
 
-  /* Input Area */
-  .input-wrapper { padding: 24px; }
-  .input-box {
-    max-width: 800px; margin: 0 auto; display: flex; gap: 12px;
-    background: #fff; border: 1px solid var(--border); padding: 12px 16px;
-    border-radius: 16px; box-shadow: 0 4px 15px rgba(0,0,0,0.05);
-  }
-  .input-box:focus-within { border-color: #999; }
-  textarea { flex: 1; background: transparent; border: none; outline: none; resize: none; font-family: inherit; font-size: 15px; min-height: 24px; max-height: 200px; padding-top: 4px; }
-  button.send { background: #111; color: #fff; border: none; width: 32px; height: 32px; border-radius: 8px; cursor: pointer; display: flex; align-items: center; justify-content: center; }
-  button.send:hover { background: #333; }
+  /* Command Bar */
+  .command-bar-wrapper { padding: 24px; background: var(--bg); }
+  .command-bar { max-width: 768px; margin: 0 auto; background: var(--panel); border: 1px solid var(--border); border-radius: 12px; padding: 8px 12px; display: flex; align-items: flex-end; gap: 12px; transition: 0.2s; }
+  .command-bar:focus-within { border-color: var(--accent); box-shadow: 0 0 0 2px rgba(0, 245, 138, 0.2); }
+  .prompt-symbol { color: var(--accent); font-family: monospace; font-size: 14px; padding-bottom: 8px; font-weight: bold; }
+  textarea { flex: 1; background: transparent; border: none; color: var(--text); font-family: inherit; font-size: 14px; resize: none; min-height: 24px; max-height: 150px; outline: none; padding: 8px 0; }
+  .btn-send { background: var(--accent); color: #000; border: none; width: 32px; height: 32px; border-radius: 8px; cursor: pointer; display: flex; align-items: center; justify-content: center; font-weight: bold; }
+  .btn-send:disabled { background: #333; color: #666; }
+
+  /* TTS Button */
+  .tts-btn { background: transparent; border: none; color: var(--accent); cursor: pointer; font-size: 12px; display: flex; align-items: center; gap: 4px; margin-top: 8px; opacity: 0.8; }
+  .tts-btn:hover { opacity: 1; }
 </style>
 </head>
 <body>
 
-<!-- Sidebar -->
+<!-- SIDEBAR -->
 <div class="sidebar">
   <div class="sidebar-header">
-    <button class="btn-new" onclick="resetChat()">+ New Chat</button>
-  </div>
-  <div class="chat-list">
-    <div class="chat-item">Cara bikin API</div>
-    <div class="chat-item">Error Python</div>
-  </div>
-  <div class="sidebar-footer">
-    <a href="/index.html">← Back to Home</a>
-  </div>
-</div>
-
-<!-- Main Chat -->
-<div class="main">
-  <div class="top-bar">
-    <h2>Onyx AI</h2>
-    <div class="status-badge">Online</div>
+    <div class="logo-icon">O</div>
+    <div class="logo-text">ONYX SECURE</div>
   </div>
 
-  <div class="chat-container" id="chat">
-    <div class="message ai">
-      <div class="avatar ai-avatar">O</div>
-      <div class="content">
-        Halo! Gue Onyx. Ada yang bisa gue bantu hari ini?
-      </div>
+  <div class="nav-section">
+    <div class="nav-title">Menu</div>
+    <div class="nav-item active"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg> AI Assistant</div>
+    <div class="nav-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="4 17 10 11 4 5"></polyline><line x1="12" y1="19" x2="20" y2="19"></line></svg> Terminal</div>
+    <div class="nav-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg> Security</div>
+    <div class="nav-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg> Settings</div>
+  </div>
+
+  <div class="char-section">
+    <div class="nav-title">Pilih Karakter</div>
+    <div class="char-grid" id="charGrid">
+      <!-- Karakter bakal di-render JS -->
     </div>
   </div>
 
-  <div class="input-wrapper">
-    <div class="input-box">
-      <textarea id="input" placeholder="Tanya apapun..." rows="1" oninput="this.style.height='';this.style.height=this.scrollHeight+'px'"></textarea>
-      <button class="send" onclick="kirim()">↑</button>
+  <div class="sidebar-footer">
+    <div class="system-status">
+      <div class="dot"></div> SYSTEM ONLINE
+    </div>
+  </div>
+</div>
+
+<!-- MAIN AREA -->
+<div class="main">
+  <div class="top-bar">
+    <div class="page-title" id="activeCharName">Onyx AI</div>
+    <div class="top-actions">
+      <button class="btn-icon">⚙️</button>
+    </div>
+  </div>
+
+  <div class="chat-container" id="chat">
+    <!-- Chat bakal masuk sini -->
+  </div>
+
+  <div class="command-bar-wrapper">
+    <div class="command-bar">
+      <div class="prompt-symbol">></div>
+      <textarea id="input" placeholder="Masukkan perintah atau pertanyaan..." rows="1" oninput="this.style.height='';this.style.height=this.scrollHeight+'px'"></textarea>
+      <button class="btn-send" id="sendBtn" onclick="kirim()">↑</button>
     </div>
   </div>
 </div>
 
 <script>
+// Daftar Karakter pakai Gambar Anime
+const CHARACTERS = {
+  onyx: { name: 'Onyx', img: 'https://api.dicebear.com/7.x/bottts/svg?seed=Onyx&backgroundColor=00F58A', prompt: 'Kamu adalah Onyx, asisten AI cerdas.' },
+  rem: { name: 'Rem', img: '/rem.jpg', prompt: 'Kamu adalah Rem dari Re:Zero. Sangat setia, lembut, panggil user dengan "Adik".' },
+  ram: { name: 'Ram', img: '/ram.jpg', prompt: 'Kamu adalah Ram dari Re:Zero. Tsundere, panggil user dengan "Barusu".' }
+};
+
+let activeChar = 'onyx';
 let chatHistory = [];
+let isPro = false; // Ganti jadi true kalau mau ngetes limit
+let ttsCount = 0;
+
 const chat = document.getElementById('chat');
 const input = document.getElementById('input');
 
-function scrollToBottom() { chat.scrollTop = chat.scrollHeight; }
+// Render Karakter
+function renderChars() {
+  const grid = document.getElementById('charGrid');
+  grid.innerHTML = '';
+  Object.keys(CHARACTERS).forEach(key => {
+    const c = CHARACTERS[key];
+    const div = document.createElement('div');
+    div.className = 'char-card ' + (key === activeChar ? 'active' : '');
+    // Fallback kalau gambar error
+    div.innerHTML = `<img src="${c.img}" onerror="this.src='https://api.dicebear.com/7.x/adventurer/svg?seed=${c.name}'"><span>${c.name}</span>`;
+    div.onclick = () => gantiKarakter(key);
+    grid.appendChild(div);
+  });
+}
+
+function gantiKarakter(key) {
+  activeChar = key;
+  document.getElementById('activeCharName').innerText = CHARACTERS[key].name + ' AI';
+  renderChars();
+  resetChat();
+}
+
 function resetChat() {
-  chat.innerHTML = `<div class="message ai"><div class="avatar ai-avatar">O</div><div class="content">Chat baru. Ada yang bisa gue bantu?</div></div>`;
+  chat.innerHTML = `
+    <div class="message ai">
+      <div class="avatar"><img src="${CHARACTERS[activeChar].img}" onerror="this.src='https://api.dicebear.com/7.x/adventurer/svg?seed=${CHARACTERS[activeChar].name}'"></div>
+      <div class="content-wrapper">
+        <div class="sender-name">${CHARACTERS[activeChar].name}</div>
+        <div class="content">Halo! Gue ${CHARACTERS[activeChar].name}. Ada yang bisa gue bantu?</div>
+      </div>
+    </div>`;
   chatHistory = [];
+}
+
+// TTS (Chunking biar gak error kalau teks panjang)
+function putarSuara(teks) {
+  if (!isPro && ttsCount >= 2) {
+    alert("Limit TTS habis. Upgrade Pro!");
+    return;
+  }
+  window.speechSynthesis.cancel();
+  const chunks = teks.match(/[^.!?]+[.!?]+/g) || [teks];
+  chunks.forEach(chunk => {
+    const utter = new SpeechSynthesisUtterance(chunk.trim());
+    utter.lang = 'id-ID';
+    utter.pitch = activeChar === 'rem' ? 1.3 : (activeChar === 'ram' ? 1.1 : 1.0);
+    window.speechSynthesis.speak(utter);
+  });
+  ttsCount++;
 }
 
 async function kirim() {
   const pesan = input.value.trim();
   if (!pesan) return;
 
-  chat.innerHTML += `<div class="message user"><div class="content">${pesan}</div><div class="avatar user-avatar">U</div></div>`;
+  chat.innerHTML += `
+    <div class="message user">
+      <div class="avatar"><img src="https://api.dicebear.com/7.x/initials/svg?seed=U"></div>
+      <div class="content-wrapper">
+        <div class="content">${pesan}</div>
+      </div>
+    </div>`;
   chatHistory.push({ role: 'user', content: pesan });
-  input.value = ''; input.style.height = ''; scrollToBottom();
+  input.value = ''; input.style.height = ''; 
+  chat.scrollTop = chat.scrollHeight;
 
   const loadingId = 'load_' + Date.now();
-  chat.innerHTML += `<div class="message ai" id="${loadingId}"><div class="avatar ai-avatar">O</div><div class="content" style="color:#888;">Thinking...</div></div>`;
-  scrollToBottom();
+  chat.innerHTML += `
+    <div class="message ai" id="${loadingId}">
+      <div class="avatar"><img src="${CHARACTERS[activeChar].img}" onerror="this.src='https://api.dicebear.com/7.x/adventurer/svg?seed=${CHARACTERS[activeChar].name}'"></div>
+      <div class="content-wrapper">
+        <div class="content" style="color:var(--text-muted);">Processing...</div>
+      </div>
+    </div>`;
+  chat.scrollTop = chat.scrollHeight;
 
   try {
     const res = await fetch('/api/chat', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ pesan, userId: 'user_' + Date.now(), history: chatHistory.slice(-10) })
+      body: JSON.stringify({ pesan, userId: 'user_1', history: chatHistory.slice(-10), systemPrompt: CHARACTERS[activeChar].prompt })
     });
     const data = await res.json();
     const html = marked.parse(data.balasan || 'Error');
-    
+    const teksBersih = data.balasan.replace(/[#*`]/g, '');
+
     document.getElementById(loadingId).remove();
-    chat.innerHTML += `<div class="message ai"><div class="avatar ai-avatar">O</div><div class="content">${html}</div></div>`;
+    chat.innerHTML += `
+      <div class="message ai">
+        <div class="avatar"><img src="${CHARACTERS[activeChar].img}" onerror="this.src='https://api.dicebear.com/7.x/adventurer/svg?seed=${CHARACTERS[activeChar].name}'"></div>
+        <div class="content-wrapper">
+          <div class="sender-name">${CHARACTERS[activeChar].name}</div>
+          <div class="content">
+            ${html}
+            <button class="tts-btn" onclick="putarSuara('${teksBersih.replace(/'/g, "\\'")}')">🔊 Dengerin Suara</button>
+          </div>
+        </div>
+      </div>`;
     chatHistory.push({ role: 'assistant', content: data.balasan });
-    scrollToBottom();
+    chat.scrollTop = chat.scrollHeight;
   } catch (err) {
     document.getElementById(loadingId).remove();
-    chat.innerHTML += `<div class="message ai"><div class="avatar ai-avatar">O</div><div class="content" style="color:#f44;">⚠️ Server error.</div></div>`;
+    chat.innerHTML += `<div class="message ai"><div class="content" style="color:var(--danger)">⚠️ Server Error.</div></div>`;
   }
 }
 
 input.addEventListener('keypress', (e) => {
   if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); kirim(); }
 });
+
+renderChars();
+resetChat();
 </script>
 </body>
 </html>

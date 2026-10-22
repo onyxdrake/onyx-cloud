@@ -7,7 +7,7 @@ const { hooks } = require('../core/hooks');
 const router = express.Router();
 
 router.post('/chat', async (req, res) => {
-  const { pesan, chatId, mode = 'chat', userId, bahasa: userBahasa, personality = 'formal', reasoning = 'medium' } = req.body;
+  const { pesan, chatId, mode = 'chat', userId, bahasa: userBahasa, personality = 'formal', reasoning = 'medium', systemPrompt } = req.body;
   if (!pesan) return res.json({ balasan: 'Empty message.' });
   if (!userId) return res.json({ balasan: 'Please login first.', needLogin: true });
 
@@ -58,7 +58,7 @@ router.post('/chat', async (req, res) => {
       content: m.content
     }));
 
-    const result = await agentLoop(pesan, mode, bahasa, personality, reasoning, historyChat);
+    const result = await agentLoop(pesan, mode, bahasa, personality, reasoning, historyChat, systemPrompt);
     const balasan = typeof result === 'string' ? result : result.content;
     const usage = typeof result === 'string' ? {} : (result.usage || {});
 
