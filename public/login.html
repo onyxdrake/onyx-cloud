@@ -1,44 +1,127 @@
 <!DOCTYPE html>
-<html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#0a0a0a"><title>Login — Onyx</title>
-<style>* { box-sizing: border-box; margin: 0; padding: 0; } body { font-family: -apple-system, sans-serif; background: #0a0a0a; color: #eee; min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 20px; } .box { background: #141414; border: 1px solid #1f1f1f; border-radius: 16px; padding: 24px; max-width: 380px; width: 100%; } h1 { font-size: 22px; margin-bottom: 6px; background: linear-gradient(90deg, #0f0, #0ff); -webkit-background-clip: text; -webkit-text-fill-color: transparent; } p { color: #666; font-size: 13px; margin-bottom: 20px; } input { width: 100%; background: #0a0a0a; border: 1px solid #222; color: #eee; padding: 12px 14px; border-radius: 10px; margin-bottom: 12px; font-size: 14px; outline: none; } input:focus { border-color: #0f0; } button { width: 100%; background: #0f0; color: #000; border: none; padding: 12px; border-radius: 10px; font-weight: 700; font-size: 14px; cursor: pointer; margin-top: 6px; } button:disabled { opacity: 0.5; } .link { text-align: center; margin-top: 16px; font-size: 13px; } .link a { color: #0f0; text-decoration: none; } .msg { padding: 10px; border-radius: 8px; font-size: 13px; margin-bottom: 12px; display: none; } .msg.ok { background: #1a3a1a; color: #0f0; display: block; } .msg.err { background: #3a1a1a; color: #f44; display: block; } .hint { font-size: 11px; color: #f44; margin-top: -8px; margin-bottom: 12px; }</style></head>
-<body><div class="box">
-<h1>Login Onyx</h1>
-<p>Sign in to your account.</p>
-<div class="msg" id="msg"></div>
-<input id="email" type="email" placeholder="Email" autocomplete="email">
-<div class="hint" id="hint-email"></div>
-<input id="password" type="password" placeholder="Password" autocomplete="current-password">
-<div class="hint" id="hint-password"></div>
-<button onclick="login()" id="btn">Login</button>
-<div class="link">Don't have an account? <a href="/register.html">Register</a></div>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Login — Onyx Cloud</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  
+  /* Background Anime Rem + Blur */
+  body {
+    font-family: 'Inter', sans-serif;
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: url('https://c4.wallpaperflare.com/wallpaper/471/555/394/re-zero-rem-re-zero-kara-hajimeru-isekai-seikatsu-anime-girls-hd-wallpaper-preview.jpg') no-repeat center center/cover;
+    position: relative;
+  }
+  
+  /* Overlay putih transparan biar teks kebaca */
+  body::before {
+    content: '';
+    position: absolute; inset: 0;
+    background: rgba(255, 255, 255, 0.7);
+    backdrop-filter: blur(8px);
+    z-index: 1;
+  }
+
+  .login-card {
+    position: relative; z-index: 2;
+    background: rgba(255, 255, 255, 0.9);
+    padding: 40px;
+    border-radius: 24px;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+    width: 100%; max-width: 400px;
+    text-align: center;
+  }
+
+  .logo { width: 60px; height: 60px; background: #000; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; color: #fff; font-size: 24px; font-weight: bold; margin-bottom: 16px; }
+  h1 { font-size: 24px; color: #111; margin-bottom: 8px; }
+  p { font-size: 13px; color: #666; margin-bottom: 24px; }
+
+  .input-group { position: relative; margin-bottom: 16px; text-align: left; }
+  label { font-size: 12px; color: #444; margin-bottom: 6px; display: block; font-weight: 600; }
+  input {
+    width: 100%; padding: 14px 16px;
+    border: 1px solid #ddd; border-radius: 12px;
+    font-size: 14px; font-family: inherit; outline: none;
+    transition: border 0.2s, box-shadow 0.2s;
+    background: #fff;
+  }
+  input:focus { border-color: #000; box-shadow: 0 0 0 3px rgba(0,0,0,0.1); }
+
+  /* Tombol Mata (Liat Password) */
+  .toggle-pass {
+    position: absolute; right: 16px; top: 36px;
+    cursor: pointer; font-size: 16px; opacity: 0.5;
+  }
+  .toggle-pass:hover { opacity: 1; }
+
+  .btn-login {
+    width: 100%; padding: 14px;
+    background: #111; color: #fff;
+    border: none; border-radius: 12px;
+    font-size: 14px; font-weight: 600; cursor: pointer;
+    margin-top: 10px; transition: transform 0.1s;
+  }
+  .btn-login:active { transform: scale(0.98); }
+
+  .footer-text { margin-top: 20px; font-size: 12px; color: #888; }
+  .footer-text a { color: #000; font-weight: 600; text-decoration: none; }
+</style>
+</head>
+<body>
+
+<div class="login-card">
+  <div class="logo">O</div>
+  <h1>Welcome Back</h1>
+  <p>Login ke Onyx Cloud</p>
+
+  <div class="input-group">
+    <label>Email</label>
+    <input type="email" id="email" placeholder="nama@email.com">
+  </div>
+
+  <div class="input-group">
+    <label>Password</label>
+    <input type="password" id="password" placeholder="••••••••">
+    <!-- Tombol Mata -->
+    <span class="toggle-pass" onclick="togglePassword()">👁️</span>
+  </div>
+
+  <button class="btn-login" onclick="login()">Masuk</button>
+
+  <p class="footer-text">Belum punya akun? <a href="/register.html">Daftar</a></p>
 </div>
+
 <script>
-async function login() {
-  const email = document.getElementById('email').value.trim();
-  const password = document.getElementById('password').value;
-  const msg = document.getElementById('msg');
-  const he = document.getElementById('hint-email');
-  const hp = document.getElementById('hint-password');
-  const btn = document.getElementById('btn');
-  msg.className = 'msg'; msg.textContent = '';
-  he.textContent = ''; hp.textContent = '';
-  if (!email) { he.textContent = '⚠️ Email required'; return; }
-  if (!email.includes('@')) { he.textContent = '⚠️ Invalid email'; return; }
-  if (!password) { hp.textContent = '⚠️ Password required'; return; }
-  btn.disabled = true;
-  try {
-    const res = await fetch('/api/login', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ email, password }) });
-    const data = await res.json();
-    if (data.ok) {
-      localStorage.setItem('onyx_userId', data.userId);
-      localStorage.setItem('onyx_email', email);
-      localStorage.setItem('onyx_tier', data.tier);
-      msg.className = 'msg ok'; msg.textContent = '✅ Login successful! Tier: ' + data.tier;
-      setTimeout(() => window.location.href = '/onyx.html', 1000);
-    } else {
-      msg.className = 'msg err'; msg.textContent = '❌ ' + (data.error || 'Login failed');
-    }
-  } catch (e) { msg.className = 'msg err'; msg.textContent = '❌ ' + e.message; }
-  btn.disabled = false;
+function togglePassword() {
+  const pass = document.getElementById('password');
+  const icon = document.querySelector('.toggle-pass');
+  if (pass.type === 'password') {
+    pass.type = 'text';
+    icon.innerText = '🙈';
+  } else {
+    pass.type = 'password';
+    icon.innerText = '👁️';
+  }
 }
-</script></body></html>
+
+function login() {
+  const email = document.getElementById('email').value;
+  const pass = document.getElementById('password').value;
+  
+  if (!email || !pass) {
+    alert("Isi email dan password dulu!");
+    return;
+  }
+  
+  // Simulasi login sukses, redirect ke chat
+  window.location.href = '/onyx.html';
+}
+</script>
+</body>
+</html>
